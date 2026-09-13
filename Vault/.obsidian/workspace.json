@@ -11,10 +11,14 @@
             "id": "792288625c0a0413",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "New Note.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "New Note"
             }
           }
         ]
@@ -183,6 +187,7 @@
   },
   "active": "792288625c0a0413",
   "lastOpenFiles": [
+    "New Note.md",
     "vimiumC.md",
     "Untitled.md",
     "test2.md",
@@ -207,7 +212,6 @@
     "GIT GUD VI BINDINGS viviumC + warpd.md",
     "Flake-parts options parts.nix.md",
     "Flake parts self' and inputs'.md",
-    "Flake parts fixes -system-.md",
-    "Fish background nohup -c.md"
+    "Flake parts fixes -system-.md"
   ]
 }
