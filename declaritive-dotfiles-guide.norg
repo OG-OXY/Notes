@@ -1,0 +1,121 @@
+* Declarative NixOS System Dotfiles Guide
+
+ Core Concepts
+
+* *Zero Home Manager Bloat*: Bypass user-space managers entirely.
+* *Atomic Symlinking*: Use `systemd.tmpfiles.rules` with `L+` to force-overwrite configuration symlinks directly from the immutable Nix store.
+* *Dynamic User Mapping*: Iterate over `config.users.users` automatically to target human users without hardcoding home paths.
+
+ The `systemDotfiles` NixOS Module
+
+Save this module in your dendritic flake structure (e.g., `modules/system-dotfiles.nix`):
+
+@code nix
+{ config, lib, pkgs, ... }:
+
+let
+cfg = config.programs.systemDotfiles;
+
+# Filter for actual human users under /home
+
+normalUsers = lib.filterAttrs
+(name: user: user.home != null && lib.hasPrefix "/home/" user.home)
+config.users.users;
+
+mkUserRules = username: user: files:
+let
+home = user.home;
+in
+lib.flatten (lib.mapAttrsToList (subPath: fileContent: [
+"d ${home}/.config/${lib.dirOf subPath} 0755 ${username}${user.group} -"
+"L+ ${home}/.config/${subPath} - - - -${fileContent}"
+]) files);
+
+allTmpfilesRules = lib.flatten (
+lib.mapAttrsToList (username: user: mkUserRules username user cfg.files) normalUsers
+);
+in
+{
+options.programs.systemDotfiles = {
+enable = lib.mkEnableOption "system-level config deployment via systemd tmpfiles";
+
+```
+files = lib.mkOption {
+  type = lib.types.attrsOf lib.types.path;
+  default = {};
+  description = "Attribute set of ~/.config/ relative paths mapped to store paths.";
+};
+
+```
+
+};
+
+config = lib.mkIf cfg.enable {
+systemd.tmpfiles.rules = allTmpfilesRules;
+};
+}
+@end
+
+ Consuming in Your Flake
+
+Feed multiple application configurations into your module from anywhere in your flake:
+
+@code nix
+programs.systemDotfiles = {
+enable = true;
+files = {
+"warpd/config" = pkgs.writeText "warpd-config" ''
+left: space
+right: r
+hint_activation_key: A-M-h
+grid_activation_key: A-M-g
+'';
+"ghostty/config" = pkgs.writeText "ghostty-config" ''
+font-size = 14
+cursor-style = block
+'';
+};
+};
+@end
+
+ Niri & Warpd Integration
+
+Manage your Niri window manager config directly through the module, wiring bindings to spawn `warpd` modes:
+
+@code nix
+programs.systemDotfiles.files."niri/config.kdl" = pkgs.writeText "niri-config" ''
+binds {
+Mod+Space { spawn "apps"; }
+Mod+W { spawn "warp"; }
+}
+
+layout {
+default-column-width { proportion 0.5; }
+border {
+width 7
+active-color "rgba(255, 115, 0, 0.93)"
+inactive-color "rgba(89, 89, 89, 0.67)"
+}
+}
+'';
+@end
+
+ Declarative Vimium C Configuration
+
+1. Export your backup configuration from Vimium C options page.
+2. Store the JSON options file in your repository.
+3. Deploy it declaratively to `~/.config/vimiumc/options.json`:
+
+@code nix
+programs.systemDotfiles.files."vimiumc/options.json" = pkgs.writeText "vimium-options" ''
+{
+"keyMappings": "map j scrollDown\nmap k scrollUp\nmap h scrollLeft\nmap l scrollRight",
+"linkHintCharacters": "astgmneio"
+}
+'';
+@end
+
+ Hotloading & Stripping Home Manager
+
+* *Zeroing Imperative Files*: Delete legacy folders inside `~/.config/` that you want managed. Running `nixos-rebuild switch` will force-recreate them instantly as clean symlinks pointing to the Nix store via `systemd-tmpfiles`.
+* *Hotloading Updates*: Whenever you tweak a config block in your flake and run `nixos-rebuild switch`, systemd tmpfiles execute instantly, updating symlinks live without needing user-space activation scripts or logging out.

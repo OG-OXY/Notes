@@ -1,0 +1,13 @@
+    paths = [
+      cudaPackages.cudatoolkit
+      cudaPackages.cuda_cudart
+      cudaPackages.cuda_cudart.static
+    ];
+    postBuild = ''
+      rm "$out/lib64
+'';
+
+the comment you linked specifically mentions "cuda toolkit" and explains it's needed for nvcc, which in your case is exactly what nvidia-cuda-toolkit provides.
+
+Do not install cuda, install nvidia-cuda-toolkit.
+

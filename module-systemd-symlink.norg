@@ -1,0 +1,40 @@
+Building a Home Manager-free system module pattern for your core tools is straightforward once you generalize the `systemd.tmpfiles` approach. By writing clean, modular options that output Nix text files and drop them straight into `~/.config`, you keep your entire user environment fully declarative from `nixos-rebuild`.
+
+Here is the blueprint for how you can structure a reusable module pattern for any tool (like your terminal, shell initialization, or window manager config) without a single line of Home Manager:
+
+### 1. The Reusable Module Pattern
+
+Create a module file (e.g., `modules/xdg-app.nix`) that accepts an attribute set of settings or raw text, writes it to the Nix store, and drops a symlink via `systemd.tmpfiles`:
+
+```nix
+{ config, lib, pkgs, ... }:
+
+let
+  cfg = config.programs.myTool; # Replace with your tool name
+in {
+  options.programs.myTool = {
+    enable = lib.mkEnableOption "myTool configuration";
+    
+    # Optional: support structured settings or raw text blocks
+    configFile = lib.mkOption {
+      type = lib.types.path;
+      description = "Path to the generated config file.";
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    # System-wide tmpfiles rule forcing the symlink into ~/.config/mytool/config
+    systemd.tmpfiles.rules = [
+      "d /home/ty/.config/mytool 0755 ty users -"
+      "L+ /home/ty/.config/mytool/config - - - - ${cfg.configFile}"
+    ];
+  };
+}
+
+```
+
+### 2. Scaling to Multi-User / Multi-Path Configs
+
+If you want to manage multiple config files or ensure user directories scale cleanly without hardcoding `/home/ty`, you can map over `config.users.users` or build a generic helper loop inside your dendritic flake architecture.
+
+What's the next tool or dotfile you want to pull out of Home Manager and wire directly into this NixOS system activation pattern?

@@ -1,0 +1,211 @@
+**wlr-which-key-module-breakdown.norg**
+
+
+
+
+
+
+
+
+
+# NixOS Custom Module Architecture (`wlr-which-key.nix`)
+
+This document provides a line-by-line breakdown of the custom NixOS module designed to declaratively generate menu wrappers for `wlr-which-key` using system-level packages (`environment.systemPackages`).
+
+
+
+1. Module Header & Lambda Arguments
+
+
+
+```nix
+{ config, lib, pkgs, ... }:
+
+```
+
+
+
+
+# `{ ... `: Defines a Nix attribute set pattern for function parameters (a lambda header).
+
+
+# `config`: Represents the final evaluated state of the entire system configuration.
+
+
+# `lib`: The Nixpkgs utility library containing type checkers, option generators (`mkOption`), and functional operators (`mapAttrsToList`).
+
+
+# `pkgs`: The Nixpkgs package set used to reference binaries (e.g., `pkgs.wlr-which-key`) and build derivation utilities (e.g., `pkgs.writeText`, `pkgs.writeShellScriptBin`).
+
+
+# `...`: The variadic wildcard operator. It prevents Nix from throwing an error when NixOS passes additional system arguments (like `modulesPath` or `inputs`) to this module.
+
+
+
+
+2. Top-Level `let` Block Expressions
+
+
+
+The `let` block declares private variables and local helper functions that exist only inside this file's scope.
+
+
+
+
+### 2.1 Configuration Variable Alias
+
+```nix
+cfg = config.programs.wlr-which-key;
+
+```
+- `cfg`: A shortcut reference to `config.programs.wlr-which-key`. Prevents redundant typing when accessing options inside `mkMenuPackage` or `config = lib.mkIf ...`.
+
+
+
+
+### 2.2 Submodule Schema (`menuEntryType`)
+
+```nix
+menuEntryType = lib.types.submodule {
+options = {
+key = lib.mkOption {
+type = lib.types.str;
+description = "Key binding to trigger the action.";
+};
+desc = lib.mkOption {
+type = lib.types.str;
+description = "Description displayed in the menu.";
+};
+cmd = lib.mkOption {
+type = lib.types.str;
+description = "Command or path to execute when selected.";
+};
+};
+};
+
+```
+- `menuEntryType`: A private variable name holding a type schema definition.
+- `lib.types.submodule`: Defines a nested struct/attribute set type inside an option.
+- `options = { ... `: Establishes the exact required fields (`key`, `desc`, `cmd`) that every menu entry item must contain.
+- `type = lib.types.str`: Enforces that each field must evaluate strictly to a string (`""`).
+
+
+
+
+### 2.3 Package Generator Function (`mkMenuPackage`)
+
+```nix
+mkMenuPackage = name: menuEntries:
+let
+configSet = lib.filterAttrs (_: v: v != null) {
+inherit (cfg.settings) anchor font;
+margin_top = cfg.settings.margin;
+margin_bottom = cfg.settings.margin;
+margin_left = cfg.settings.margin;
+margin_right = cfg.settings.margin;
+padding = cfg.settings.padding;
+border_width = cfg.settings.border_width;
+menu = menuEntries;
+};
+configFile = pkgs.writeText "${name}-config.yaml" (builtins.toJSON configSet);
+in
+pkgs.writeShellScriptBin name ''
+exec ${pkgs.wlr-which-key}/bin/wlr-which-key${configFile}
+'';
+
+```
+
+
+
+```
+- `name: menuEntries:`: A curried function taking two sequential arguments:
+1. `name`: The attribute key name defined by the user in `cfg.menus` (e.g., `"menu-apps"`).
+2. `menuEntries`: The list of submodules corresponding to that menu key.
+- `lib.filterAttrs (_: v: v != null)`:
+1. `lib.filterAttrs`: Filters an attribute set based on a predicate function.
+2. `_`: An ignored argument representing the key name (prefixed with `_` to suppress LSP warnings).
+3. `v`: The attribute value.
+4. `v != null`: Returns `true` if `v` is not equal to `null`. Any option resolving to `null` is stripped so it does not output `"option": null` into the JSON/YAML file and trigger deserialization errors in `wlr-which-key`.
+- `inherit (cfg.settings) anchor font;`: Pulls `anchor` and `font` directly out of `cfg.settings` and injects them into `configSet`.
+- `margin_top = ...`: Maps the unified `cfg.settings.margin` integer into the four explicit directional fields required by `wlr-which-key`'s YAML schema.
+- `configFile = pkgs.writeText ...`: Serializes `configSet` to JSON via `builtins.toJSON` (valid YAML) and writes it into a read-only file in the Nix store.
+- `pkgs.writeShellScriptBin name ''...''`:
+1. `name`: Defines the generated binary's name inside `/bin/` (e.g., `/bin/menu-apps`).
+2. `exec`: Replaces the shell process with `wlr-which-key`, passing the path to the store-generated `configFile`.
+
+
+
+```
+
+
+
+
+### 2.4 Attribute-to-List Mapping (`generatedMenuPackages`)
+
+```nix
+generatedMenuPackages = lib.mapAttrsToList mkMenuPackage cfg.menus;
+
+```
+- `lib.mapAttrsToList`: Iterates over the `cfg.menus` attribute set.
+- For each key-value pair in `cfg.menus`:
+1. Passes the key (e.g., `"menu-apps"`) as `name`.
+2. Passes the value (`[ { key = "..."; ... } `) as `menuEntries`.
+- `generatedMenuPackages`: Evaluates to a flat list of derivation packages (`[ packageA packageB `).
+
+
+
+3. Public Options & Configuration Body
+
+
+
+```nix
+in
+{
+options.programs.wlr-which-key = { ... };
+config = lib.mkIf cfg.enable { ... };
+}
+
+```
+
+
+
+
+### 3.1 Option Declarations (`options.programs.wlr-which-key`)
+
+- `enable = lib.mkEnableOption "wlr-which-key system menus";`: Standard NixOS helper creating `programs.wlr-which-key.enable` (boolean, defaults to `false`).
+- `settings`: Holds structural layout and font configuration options.
+- `type = lib.types.nullOr lib.types.int;`: Specifies that an option can either be an integer (e.g., `10`) OR `null` (unset/default).
+- `default`: The fallback value assigned if the user leaves the option unspecified in `configuration.nix`.
+- `menus = lib.mkOption { type = lib.types.attrsOf (lib.types.listOf menuEntryType); };`:
+1. `lib.types.attrsOf`: An attribute set with dynamic keys (e.g., `menu-apps`, `menu-power`).
+2. `lib.types.listOf menuEntryType`: Each key must map to a list containing zero or more items conforming to the `menuEntryType` submodule structure.
+
+
+
+
+### 3.2 System Execution (`config = lib.mkIf cfg.enable`)
+
+- `lib.mkIf cfg.enable`: Guard condition. The block inside only merges into the system configuration if `programs.wlr-which-key.enable = true;`.
+- `environment.systemPackages = [ pkgs.wlr-which-key ] ++ generatedMenuPackages;`:
+1. Installs the base `wlr-which-key` binary.
+2. Uses `++` (list concatenation) to append all dynamic menu wrappers (`generatedMenuPackages`) to `/run/current-system/sw/bin`.
+
+
+
+4. System Integration & Execution Flow
+
+
+
+```kdl
+// Inside config.kdl (Out-of-Store Symlink)
+binds {
+Mod+Space { spawn "menu-apps"; }
+}
+
+```
+
+
+
+1. During `nixos-rebuild switch`, `generatedMenuPackages` compiles the bash scripts into the Nix store.
+2. Symlinks are created under `/run/current-system/sw/bin/menu-apps`.
+3. Niri executes `menu-apps` directly from `$PATH` without requiring Home Manager evaluation logic or dynamic KDL generation.

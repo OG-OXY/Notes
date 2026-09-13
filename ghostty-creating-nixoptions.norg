@@ -1,0 +1,67 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+
+let
+  # 1. Grab a reference to our custom config options for easy access
+  cfg = config.programs.myGhostty;
+in
+{
+  # ---------------------------------------------------------------------------
+  # INTERFACE: Define your custom options
+  # ---------------------------------------------------------------------------
+  options.programs.myGhostty = {
+    enable = lib.mkEnableOption "Enable Ty's custom wrapped Ghostty";
+
+    theme = lib.mkOption {
+      type = lib.types.str;
+      default = "Aurora";
+      description = "Theme to bake into Ghostty";
+    };
+
+    fontSize = lib.mkOption {
+      type = lib.types.int;
+      default = 22;
+      description = "Font size for Ghostty";
+    };
+
+    opacity = lib.mkOption {
+      type = lib.types.float;
+      default = 1.0;
+      description = "Background opacity";
+    };
+  };
+
+# ---------------------------------------------------------------------------
+  # IMPLEMENTATION: Execute logic ONLY if `enable = true`
+  # ---------------------------------------------------------------------------
+  config = lib.mkIf cfg.enable {
+    home.packages = [
+      (
+        let
+          # Generate a pure store-baked config file from the options above
+          configFile = pkgs.writeText "ghostty.conf" ''
+            theme = ${cfg.theme}
+            font-size = ${toString cfg.fontSize}
+            background-opacity = ${toString cfg.opacity}
+            confirm-close-surface = false
+            cursor-style = block
+          '';
+        in
+        # Create a custom wrapped package using standard pkgs.symlinkJoin
+        pkgs.symlinkJoin {
+          name = "ghostty-wrapped";
+          paths = [ pkgs.ghostty ];
+          buildInputs = [ pkgs.makeBinaryWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/ghostty \
+              --add-flags "--config-file=${configFile}"
+          '';
+        }
+      )
+    ];
+  };
+}

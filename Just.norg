@@ -1,0 +1,49 @@
+* "just" nix helper program
+
+** The Stack at a Glance **
+
+* **`just`**: Saves you from memorizing/typing long `nix` commands. You define short recipes in a `justfile` (e.g., `just switch`, `just clean`).
+* **`nh`**: A fast, user-friendly wrapper for `nixos-rebuild` and `home-manager`. It handles target selection, diff previews, and generation management.
+* **`nom` (`nix-output-monitor`)**: Turns chaotic build logs into real-time dependency trees and colored progress bars. `nh` uses `nom` automatically under the hood if it's installed!
+
+---
+
+### Template: `justfile`
+
+Save this as `justfile` in the root of your Nix flake:
+
+```just
+default:
+-   @just --list
+
+- Rebuild and switch NixOS configuration
+switch host="NixOS":
+    nh os switch . -- --flake .#{{host}}
+
+- Test configuration without adding a new bootloader entry
+test host="NixOS":
+    nh os test . -- --flake .#{{host}}
+
+- Rebuild Home Manager profile only
+home user="ty":
+    nh home switch . -- --flake .#{{user}}
+
+- Clean old generations and run garbage collection
+clean:
+    nh clean all --keep 5
+
+```
+
+---
+
+### Pro Tip for Fish:
+
+- If you want to run `just` commands from **any directory** (without having to `cd` into your flake directory first), add this quick Fish function to your configuration:
+
+```fish
+function j --description "Run just recipes against global Nix config"
+    just --justfile ~/.config/nixos/justfile --working-directory ~/.config/nixos $argv
+end
+
+```
+- Then you can just run `j switch`, `j home`, or `j clean` from anywhere in your terminal!
