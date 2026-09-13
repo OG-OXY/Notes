@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "ff5ed5e3af1ad4cf",
+        "id": "a1d3ade13be85466",
         "type": "tabs",
         "children": [
           {
-            "id": "f43349101efe2782",
+            "id": "792288625c0a0413",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "systemdtmpfilesmodule.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "systemdtmpfilesmodule"
+              "title": "New tab"
             }
           }
         ]
@@ -99,7 +95,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "systemdtmpfilesmodule.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +113,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "systemdtmpfilesmodule.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +155,6 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "systemdtmpfilesmodule.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -188,32 +181,33 @@
       "bases:Create new base": false
     }
   },
-  "active": "f43349101efe2782",
+  "active": "792288625c0a0413",
   "lastOpenFiles": [
-    "The Way.md",
-    "Structuring dendritic home-manager modules and custom nixpkgs overlays.md",
+    "vimiumC.md",
+    "Untitled.md",
+    "test2.md",
+    "vimiumC-Guide.md",
+    "test.md",
+    "Basics.md",
+    "& vs && and ; operator.md",
+    "580.xx.xx cachyos lto thin.md",
+    "Gamescope-Env settings.md",
     "Sed-cli.md",
-    "Rust dev lang.md",
+    "systemdtmpfilesmodule.md",
+    "nixosmodulemastery.md",
+    "Anvil rust WM.md",
+    "Cleanest way to dendritic nix.md",
+    "Structuring dendritic home-manager modules and custom nixpkgs overlays.md",
     "Rust WM training penrose anvil.md",
+    "The Way.md",
+    "Rust dev lang.md",
     "Nvidia offload.md",
     "Multi-Host Dendritic and publicly consumable nixosModules.md",
     "Markdown syntax.md",
-    "Gamescope-Env settings.md",
     "GIT GUD VI BINDINGS viviumC + warpd.md",
     "Flake-parts options parts.nix.md",
     "Flake parts self' and inputs'.md",
     "Flake parts fixes -system-.md",
-    "Fish background nohup -c.md",
-    "Dendritic NixOS.md",
-    "Cleanest way to dendritic nix.md",
-    "Building REAL nixpkgs modules from scratch.md",
-    "Basics.md",
-    "BW Github 2FA setup key.md",
-    "Anvil rust WM.md",
-    "580.xx.xx cachyos lto thin.md",
-    "& vs && and ; operator.md",
-    "wlr-which-key_module_breakdown.md",
-    "nixosmodulemastery.md",
-    "systemdtmpfilesmodule.md"
+    "Fish background nohup -c.md"
   ]
 }
