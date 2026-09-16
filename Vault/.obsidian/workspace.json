@@ -11,10 +11,14 @@
             "id": "792288625c0a0413",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "TMUX Binds.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "TMUX Binds"
             }
           }
         ]
@@ -183,7 +187,8 @@
   },
   "active": "792288625c0a0413",
   "lastOpenFiles": [
-    "New Note.md",
+    "Rust libraries.md",
+    "TMUX Binds.md",
     "vimiumC.md",
     "Untitled.md",
     "test2.md",
@@ -207,7 +212,6 @@
     "Markdown syntax.md",
     "GIT GUD VI BINDINGS viviumC + warpd.md",
     "Flake-parts options parts.nix.md",
-    "Flake parts self' and inputs'.md",
-    "Flake parts fixes -system-.md"
+    "Flake parts self' and inputs'.md"
   ]
 }
