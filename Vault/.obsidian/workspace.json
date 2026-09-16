@@ -34,9 +34,23 @@
               "icon": "lucide-file",
               "title": "Pure System-Wide Tooling & Fish Integration (Zero Home Manager)"
             }
+          },
+          {
+            "id": "6f77f16613fe1872",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "JJ Workflow.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "JJ Workflow"
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -200,10 +214,11 @@
       "bases:Create new base": false
     }
   },
-  "active": "bc056553743229c6",
+  "active": "6f77f16613fe1872",
   "lastOpenFiles": [
-    "TMUX Binds.md",
     "Pure System-Wide Tooling & Fish Integration (Zero Home Manager).md",
+    "JJ Workflow.md",
+    "TMUX Binds.md",
     "Rust libraries.md",
     "vimiumC.md",
     "test2.md",
@@ -226,7 +241,6 @@
     "Multi-Host Dendritic and publicly consumable nixosModules.md",
     "Markdown syntax.md",
     "GIT GUD VI BINDINGS viviumC + warpd.md",
-    "Flake-parts options parts.nix.md",
-    "Flake parts self' and inputs'.md"
+    "Flake-parts options parts.nix.md"
   ]
 }
