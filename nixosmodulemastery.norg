@@ -103,11 +103,11 @@ configFile = pkgs.writeText "warpd-config" ''
 | **Editor Autocomplete** | Full LSP completion via `nixd`/`statix`. | Limited to general type checking (string, int, bool). |
 | **NixOS Manual Docs** | Automatically generates option descriptions and defaults. | Generates a single generic description for `settings`. |
 | **Upstream Compatibility** | Breaks if upstream changes key names unless module is updated. | Supports new upstream keys instantly without code changes. |
-| **Null Handling** | Requires `nullOr` + `lib.filterAttrs`. | No `null` handling needed; unwritten keys don't exist. |
+    | **Null Handling** | Requires `nullOr` + `lib.filterAttrs`. | No `null` handling needed; unwritten keys don't exist. |
 
 --
 
- 3. Technical Reference: Nix Types & Functional Primitive Operators
+** 3. Technical Reference: Nix Types & Functional Primitive Operators
 
 To write modules without assistance, memorize these high-frequency Nix primitives.
 

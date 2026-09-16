@@ -1,8 +1,3 @@
----
-id: nixosmodulemastery
-aliases: []
-tags: []
----
 **nix-module-authoring-mastery.norg**
 
 
@@ -162,7 +157,9 @@ _ **NixOS Manual Docs** | Automatically generates option descriptions and defaul
 
 
 
-3. Technical Reference: Nix Types & Functional Primitive Operators
+
+## 3. Technical Reference: Nix Types & Functional Primitive Operators
+
 
 
 
