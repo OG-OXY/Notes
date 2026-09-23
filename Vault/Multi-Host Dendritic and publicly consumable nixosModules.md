@@ -1,14 +1,21 @@
-### 1. Structuring a Multi-Host Setup with `modulesWithSystem`
+Here is your Obsidian markdown note, cleaned up with proper syntax, accurate Nix code formatting, and structured headings.
 
-When managing multiple hosts (e.g., `desktop`, `laptop`, `server`) in a dendritic layout, you want to avoid duplicating `lib.nixosSystem` boilerplate, hardcoding system architectures (`x86_64-linux`, `aarch64-linux`), or re-evaluating `nixpkgs` for every machine.
+---
 
-By using `flake-parts` alongside `modulesWithSystem`, you centralize `pkgs` evaluation inside `perSystem` and write system-agnostic host profiles that cleanly pull packages from `self'` and `inputs'`.
+# Structuring a Multi-Host Setup with `modulesWithSystem`
 
-#### Repository Directory Structure
+When managing multiple hosts (e.g., desktop, laptop, server) in a dendritic layout, you want to avoid duplicating `lib.nixosSystem` boilerplate, hardcoding system architectures (`x86_64-linux`, `aarch64-linux`), or re-evaluating `nixpkgs` for every machine.
 
+By using **flake-parts** alongside `modulesWithSystem`, you centralize `pkgs` evaluation inside `perSystem` and write system-agnostic host profiles that cleanly pull packages from `self'` and `inputs'`.
+
+---
+
+## Directory Structure
+
+```
 ├── flake.nix
 ├── parts/
-│   ├── pkgs.nix             # Centralized nixpkgs/overlays
+│   ├── pkgs.nix             # Centralized nixpkgs & overlays
 │   ├── modules.nix          # Internal modules using modulesWithSystem
 │   └── hosts.nix            # Multi-host definitions
 ├── modules/
@@ -24,14 +31,20 @@ By using `flake-parts` alongside `modulesWithSystem`, you centralize `pkgs` eval
     └── home-server/
         └── default.nix
 
-#### Step A: `parts/pkgs.nix` (Centralized Package Evaluation)
+```
+
+---
+
+## 1. Centralized Package Evaluation
 
 Configure `pkgs` once inside `perSystem` so that all hosts and modules share a single, unified package set with `allowUnfree` and custom overlays applied.
 
-# parts/pkgs.nix
+### `parts/pkgs.nix`
+
+```nix
 { inputs, ... }: {
   perSystem = { system, ... }: {
-    _module.args.pkgs = import inputs.nixpkgs {
+    module.args.pkgs = import inputs.nixpkgs {
       inherit system;
       config = {
         allowUnfree = true;
@@ -46,13 +59,18 @@ Configure `pkgs` once inside `perSystem` so that all hosts and modules share a s
   };
 }
 
-#### Step B: `parts/hosts.nix` (Multi-Host Orchestration)
+```
+
+---
+
+## 2. Multi-Host Orchestration
 
 Define helper functions to instantiate hosts without duplicating code. Each host consumes `self'.pkgs` and accepts `self'` and `inputs'` via `specialArgs`.
 
-# parts/hosts.nix
-{ inputs, self, ... }:
+### `parts/hosts.nix`
 
+```nix
+{ inputs, self, ... }:
 let
   # Helper to construct a host cleanly
   mkHost = { hostname, system ? "x86_64-linux", extraModules ? [ ] }:
@@ -99,17 +117,21 @@ in
   };
 }
 
-### 2. Exporting `flake.nixosModules` for Public Consumption
+```
 
-When you export NixOS modules for other people (or your own standalone flakes) to import via `inputs.your-flake.nixosModules.default`, **you don't know what architecture (`x86_64-linux`, `aarch64-linux`) the consumer will run it on**.
+---
 
-If your public module references packages from your flake inputs (like `inputs.ghostty.packages.x86_64-linux.default`), it will fail on ARM or non-standard hosts.
+## 3. Exporting `flake.nixosModules` for Public Consumption
 
-Using `modulesWithSystem` inside `flake.nixosModules` solves this by automatically resolving `self'` and `inputs'` to whatever system architecture the end consumer is evaluating.
+When exporting NixOS modules for downstream flakes to import via `inputs.your-flake.nixosModules.default`, the consumer's architecture (`x86_64-linux`, `aarch64-linux`) is not known upfront.
 
-#### `parts/modules.nix` (Exporting Public Modules)
+If a public module references packages directly from flake inputs (e.g. `inputs.ghostty.packages.x86_64-linux.default`), it will fail on ARM or non-standard targets.
 
-# parts/modules.nix
+Using `modulesWithSystem` inside `flake.nixosModules` solves this by automatically resolving `self'` and `inputs'` to whatever system architecture the consumer is evaluating.
+
+### `parts/modules.nix`
+
+```nix
 { inputs, options, ... }: {
   flake.nixosModules = {
     # 1. Export individual features
@@ -117,7 +139,6 @@ Using `modulesWithSystem` inside `flake.nixosModules` solves this by automatical
       imports = [
         (inputs.flake-parts.lib.modulesWithSystem { inherit inputs options; }
           ({ self', inputs', ... }: {
-            
             # Enable hardware/system configs
             programs.hyprland.enable = true;
 
@@ -143,16 +164,20 @@ Using `modulesWithSystem` inside `flake.nixosModules` solves this by automatical
   };
 }
 
-### How an External User Consumes Your Module
+```
 
-Because you wrapped your exported module using `modulesWithSystem`, an external user can import your module into their own flake without setting up special arguments or specifying architecture strings:
+---
 
-# External user's flake.nix
+## Downstream Usage
+
+Because the module is wrapped in `modulesWithSystem`, an external user can import it without configuring special arguments or specifying architecture strings:
+
+### External `flake.nix`
+
+```nix
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    
-    # Importing YOUR flake repository
     ty-config.url = "github:your-username/nix-config";
   };
 
@@ -160,17 +185,21 @@ Because you wrapped your exported module using `modulesWithSystem`, an external 
     nixosConfigurations.my-machine = nixpkgs.lib.nixosSystem {
       system = "aarch64-linux"; # Works on ARM automatically!
       modules = [
-        # Pulls your exported module directly
         ty-config.nixosModules.hyprland-desktop
-
         ./hardware-configuration.nix
       ];
     };
   };
 }
 
-### Summary of Benefits
+```
 
-1. **Architecture Agnostic:** Whether building locally for `x86_64-linux` or cross-compiling for an `aarch64-linux` server, `modulesWithSystem` binds `self'` and `inputs'` to the target machine without hardcoded string hacks.
-2. **True Public Reusability:** External users can consume your `nixosModules` out of the box. They get your custom packages and flake input binaries without needing to pass extra parameters or configure `specialArgs`.
-3. **Single Evaluation Tree:** Multi-host environments share the exact same `perSystem` package instantiation logic, keeping evaluation fast and memory overhead minimal across builds.
+---
+
+## Core Benefits
+
+* **Architecture Agnostic:** Whether building locally for `x86_64-linux` or cross-compiling for an `aarch64-linux` server, `modulesWithSystem` binds `self'` and `inputs'` to the target machine without string hacks.
+* **True Public Reusability:** Downstream consumers get your custom packages and binary inputs without needing extra parameter passing or manual `specialArgs` wiring.
+* **Single Evaluation Tree:** Multi-host environments share the exact same `perSystem` package instantiation logic, keeping evaluation fast and memory overhead low.
+  
+  [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]

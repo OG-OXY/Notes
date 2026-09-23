@@ -1,20 +1,29 @@
-In `flake-parts`, the top-level configuration options live within the context of `mkFlake` (or any flake-parts module). They broadly break down into three categories:
+Here is the fully formatted Obsidian note. The Nix code is now properly indented inside a single block, ASCII header dividers have been converted into clean internal code comments, and the surrounding text uses standard Obsidian callouts and bold headers for scanning.
 
-1. **Standard Flake Outputs** (`flake` options like `nixosConfigurations`, `overlays`, `templates`, etc.)
-2. **System Matrix Controls** (`systems`, `perSystem`, `modulesWithSystem`)
-3. **Flake-Parts Metaprogramming & Extensions** (`imports`, `debug`, `partition`, option declarations, etc.)
+```markdown
+# Flake-Parts Options (`parts.nix`)
 
-### Every Major Top-Level Flake-Parts Option
+In `flake-parts`, top-level configuration options live within the context of `mkFlake` (or any `flake-parts` module). They broadly break down into three core categories:
 
-The following `parts.nix` contains every native top-level option exposed by `flake-parts` (along with core ecosystem options), populated simultaneously to show syntax and available attributes.
+1. **Standard Flake Outputs:** Global `flake.*` options like `nixosConfigurations`, `overlays`, `templates`, etc.
+2. **System Matrix Controls:** `systems`, `perSystem`, and `modulesWithSystem`.
+3. **Metaprogramming & Extensions:** `imports`, `debug`, `partition`, and custom `option` declarations.
 
+> [!info] Exhaustive Template
+> The following `parts.nix` contains every native top-level option exposed by `flake-parts` alongside common ecosystem integrations, fully populated to illustrate syntax and available sub-attributes.
+
+---
+
+## Complete `parts.nix` Reference
+
+```nix
 { inputs, config, lib, options, flake-parts-lib, specialArgs, ... }:
 
 {
   # =========================================================================
   # 1. MODULE SYSTEM IMPORTS & META
   # =========================================================================
-  
+
   # External flake-parts modules or sub-files to bring into the evaluation context
   imports = [
     # inputs.flake-parts.flakeModules.modulesWithSystem
@@ -110,10 +119,10 @@ The following `parts.nix` contains every native top-level option exposed by `fla
   };
 
   # =========================================================================
-  # 3. GLOBAL FLAKE OUTPUTS (`flake.*`)
+  # 3. GLOBAL FLAKE OUTPUTS (flake.*)
   # =========================================================================
-  # Attributes declared here bypass system matrices and map directly to `flake.outputs`
-  
+
+  # Attributes declared here bypass system matrices and map directly to flake.outputs
   flake = {
     # --- System Configurations ---
     nixosConfigurations = {
@@ -177,10 +186,16 @@ The following `parts.nix` contains every native top-level option exposed by `fla
   };
 }
 
-### Core Structural Breakdown
+```
 
-- `**systems**`: Sets the string list of platforms (`x86_64-linux`, etc.) that `perSystem` will iterate through.
-- `**perSystem**`: Generates all system-bound flake outputs (`packages.${system}`, `devShells.${system}`, `apps.${system}`, `checks.${system}`, `formatter.${system}`).
-- `**flake**`: Generates all top-level, non-system-bound outputs (`nixosConfigurations`, `overlays`, `nixosModules`, `lib`, `templates`).
-- `**modulesWithSystem**`: Provided by `flake-parts.flakeModules.modulesWithSystem`. Bridges the gap so `flake.nixosConfigurations` can reference `self'.packages` without hardcoding system strings.
-- **`imports` / `options` / `config`**: Leverages the standard Nix module system inside the flake level, allowing you to split your `flake.nix` into multiple modular files (like dendritic parts).
+---
+
+## Core Structural Breakdown
+
+* **`systems`**: List of system triples (`x86_64-linux`, etc.) that `perSystem` will iterate through to evaluate system-bound outputs.
+* **`perSystem`**: Generates all system-bound outputs (`packages.${system}`, `devShells.${system}`, `apps.${system}`, `checks.${system}`, `formatter.${system}`).
+* **`flake`**: Declares top-level, non-system-bound outputs directly (`nixosConfigurations`, `overlays`, `nixosModules`, `lib`, `templates`).
+* **`modulesWithSystem`**: Provided by `flake-parts.flakeModules.modulesWithSystem`. Bridges system-specific artifacts into global modules so `flake.nixosConfigurations` can reference `self'.packages` cleanly.
+* **`imports` / `options` / `config**`: Leverages the standard Nix module system at the flake evaluation level, enabling multi-file modular layouts (dendritic patterns).
+  
+  [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]

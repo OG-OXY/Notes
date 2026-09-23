@@ -140,3 +140,7 @@ Combining the native C wrapper, correct option defaults, and `perSystem` + `flak
 * **Portability**: Drop this single `.nix` file into any folder scanned by `import-tree`. It immediately builds the package, injects the configuration, sets group permissions, and exposes `self.packages.${system}.warpd` for direct building or testing on any machine.
 * **Zero Shell Latency**: `makeBinaryWrapper` generates a pure compiled C launcher.
 * **Zero Home Manager / Dotfiles**: Everything lives strictly inside `/nix/store`, completely immutable and decoupled from user home directory paths.
+
+[[Dendritic Nix Style Wlr-Which-Key]]
+[[Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact]]
+[[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]

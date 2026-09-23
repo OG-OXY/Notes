@@ -150,3 +150,7 @@ Look at how simple, high-performance (using `makeBinaryWrapper`), and self-conta
 * You **don't** have to write long string-manipulation logic.
 * `builtins.toJSON` handles type validation natively.
 * The binary is compiled natively with `makeBinaryWrapper`, making menu popups instant with zero shell overhead.
+
+[[Dendritic Nix Style Warpd]]
+[[Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact]]
+[[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]

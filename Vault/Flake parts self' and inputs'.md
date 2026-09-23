@@ -1,29 +1,40 @@
-In **flake-parts**, `self'` and `inputs'` (pronounced _"self prime"_ and _"inputs prime"_) exist to eliminate the single most annoying part of traditional Flakes: **manually typing `x86_64-linux` or passing `system` strings everywhere.**
+Here is your Obsidian markdown note, cleaned up with proper syntax, accurate code block formatting, and structured headings.
 
-They are system-bound snapshots of your Flake’s `self` and `inputs`.
+---
 
-### The Fundamental Difference
+# Understanding `self'` and `inputs'` in `flake-parts`
 
-|Standard Flake Object|System-Agnostic?|Example Usage|
-|---|---|---|
-|`self`|Yes (Global)|`self.nixosModules.default`|
-|`**self'**`|**No (Bound to current system)**|`self'.packages.myApp`|
-|`inputs`|Yes (Global)|`inputs.nixpkgs.legacyPackages`|
-|`**inputs'**`|**No (Bound to current system)**|`inputs'.nixpkgs.packages`|
+In **flake-parts**, `self'` and `inputs'` (pronounced *"self prime"* and *"inputs prime"*) exist to eliminate the single most annoying part of traditional Flakes: manually typing `x86_64-linux` or passing system strings everywhere.
 
-### How They Work Under the Hood
+They are **system-bound snapshots** of your Flake’s `self` and `inputs`.
 
-When you define a `perSystem` block in `flake-parts`, `flake-parts` automatically inspects the current `system` (e.g., `x86_64-linux`) for that iteration and wraps `self` and `inputs` into prime equivalents:
+## The Fundamental Difference
 
-- `**inputs.nixpkgs.legacyPackages.x86_64-linux.hello**` becomes `**inputs'.nixpkgs.packages.hello**` (or `pkgs.hello`)
-- `**self.packages.x86_64-linux.myCustomApp**` becomes `**self'.packages.myCustomApp**`
+| Object | System-Agnostic? | Example Usage |
+| --- | --- | --- |
+| `self` | **Yes** (Global) | `self.nixosModules.default` |
+| **`self'`** | **No** (Bound to current system) | `self'.packages.myApp` |
+| `inputs` | **Yes** (Global) | `inputs.nixpkgs.legacyPackages` |
+| **`inputs'`** | **No** (Bound to current system) | `inputs'.nixpkgs.packages` |
 
-Notice how the `x86_64-linux` attribute disappears completely. `flake-parts` handles the attribute lookup behind the scenes.
+---
 
-### 1. Using Them Inside `perSystem`
+## How They Work Under the Hood
 
-Inside a `perSystem` function, `self'` and `inputs'` are available right in the function argument list alongside `pkgs` and `system`:
+When you define a `perSystem` block in `flake-parts`, it automatically inspects the current `system` (e.g., `x86_64-linux`) for that iteration and wraps `self` and `inputs` into prime equivalents:
 
+* `inputs.nixpkgs.legacyPackages.x86_64-linux.hello` $\rightarrow$ **`inputs'.nixpkgs.packages.hello`** (or `pkgs.hello`)
+* `self.packages.x86_64-linux.myCustomApp` $\rightarrow$ **`self'.packages.myCustomApp`**
+
+The `x86_64-linux` attribute disappears completely because `flake-parts` handles system lookup behind the scenes.
+
+---
+
+## 1. Using Them Inside `perSystem`
+
+Inside a `perSystem` function, `self'` and `inputs'` are available right in the argument list alongside `pkgs` and `system`:
+
+```nix
 { inputs, ... }: {
   systems = [ "x86_64-linux" "aarch64-linux" ];
 
@@ -42,28 +53,32 @@ Inside a `perSystem` function, `self'` and `inputs'` are available right in the 
   };
 }
 
-### 2. Using Them in NixOS / Home Manager Modules
+```
 
-When writing NixOS or Home Manager modules in a dendritic setup, you can inject `self'` and `inputs'` into your module scope using `specialArgs` or `extraSpecialArgs`.
+---
 
-#### Step A: Pass System-Bound Inputs from `flake.nix`
+## 2. Using Them in NixOS Modules
 
-Use `inputs.self.perSystem.${system}` to pass the system-bound context into your host configuration:
+When writing NixOS modules in a dendritic setup, you can inject `self'` and `inputs'` into your module scope using `specialArgs`.
 
+### Step A: Pass System-Bound Inputs from `flake.nix`
+
+Extract system-bound context using `inputs.self.perSystem.${system}` and pass it down:
+
+```nix
 # flake.nix
 { inputs, ... }: {
   systems = [ "x86_64-linux" ];
-
   imports = [ ./parts/nixos.nix ];
 
-  perSystem = { pkgs, ... }: {
+  perSystem = { system, ... }: {
     _module.args.pkgs = import inputs.nixpkgs {
       inherit system;
       config.allowUnfree = true;
     };
   };
 
-  flake.nixosConfigurations.desktop = 
+  flake.nixosConfigurations.desktop =
     let
       system = "x86_64-linux";
     in
@@ -78,16 +93,19 @@ Use `inputs.self.perSystem.${system}` to pass the system-bound context into your
     };
 }
 
-#### Step B: Consume Them Cleanly Inside Your Submodules
+```
 
-Now, any submodule in your tree can pull `self'` or `inputs'` directly from its argument header—without importing `inputs` or caring about system architecture:
+### Step B: Consume Them Cleanly Inside Submodules
 
+Any submodule in your tree can pull `self'` or `inputs'` directly from its argument header—without importing global `inputs` or caring about the system architecture:
+
+```nix
 # modules/desktop/hyprland.nix
 { config, pkgs, self', inputs', ... }:
 
 {
   environment.systemPackages = [
-    # Grab Hyprland directly from the flake input bound to x86_64-linux
+    # Grab Hyprland directly from the flake input bound to target architecture
     inputs'.hyprland.packages.hyprland
 
     # Grab a custom package built elsewhere in your own flake
@@ -95,24 +113,20 @@ Now, any submodule in your tree can pull `self'` or `inputs'` directly from its 
   ];
 }
 
-### Why This Design Prevents Scope Issues
+```
 
-1. **No Hardcoded System Chains:** You never have to write `.x86_64-linux` inside deep submodules. If you compile the host for ARM (`aarch64-linux`), `self'` automatically resolves ARM packages without altering a single module file.
-2. **Single Source of Truth:** Your package outputs (`self'.packages`) and input dependencies (`inputs'.<name>.packages`) are evaluated cleanly once per system.
+---
 
-To pass `self'` and `inputs'` into Home Manager's `extraSpecialArgs` using `flake-parts`, you extract the system-bound context from `inputs.self.perSystem.${system}` and `inputs.flake-parts.lib.inputsWithSystem system inputs` at the host declaration level.
+## 3. Passing `self'` and `inputs'` into Home Manager
 
-This allows every sub-module in your Home Manager configuration tree to consume `self'` and `inputs'` directly in its header arguments without specifying architecture strings or re-evaluating inputs.
+To pass `self'` and `inputs'` into Home Manager's `extraSpecialArgs`, extract the system-bound context at the host declaration level.
 
-### Step 1: Wire `extraSpecialArgs` in Your Host Configuration
+### Option A: Home Manager as a NixOS Module (Most Common)
 
-Whether you run Home Manager as a **standalone flake output** or as a **NixOS module** via `home-manager.nixosModules.home-manager`, configure the arguments where the Home Manager instance is instantiated:
-
-#### Option A: Home Manager as a NixOS Module (Most Common)
-
+```nix
 # parts/nixos.nix
 { inputs, ... }: {
-  flake.nixosConfigurations.desktop = 
+  flake.nixosConfigurations.desktop =
     let
       system = "x86_64-linux";
       # Extract system-bound instances
@@ -128,7 +142,6 @@ Whether you run Home Manager as a **standalone flake output** or as a **NixOS mo
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-
             # Inject self' and inputs' into all Home Manager sub-modules
             extraSpecialArgs = { inherit self' inputs'; };
 
@@ -140,10 +153,11 @@ Whether you run Home Manager as a **standalone flake output** or as a **NixOS mo
     };
 }
 
-#### Option B: Standalone Home Manager (`homeConfigurations`)
+```
 
-If you build standalone Home Manager profiles via `home-manager.lib.homeManagerConfiguration`:
+### Option B: Standalone Home Manager (`homeConfigurations`)
 
+```nix
 # parts/home.nix
 { inputs, ... }: {
   flake.homeConfigurations."ty@desktop" =
@@ -154,7 +168,7 @@ If you build standalone Home Manager profiles via `home-manager.lib.homeManagerC
     in
     inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = self'.pkgs; # Re-use the perSystem-configured pkgs instance
-
+      
       # Inject self' and inputs' globally into HM modules
       extraSpecialArgs = { inherit self' inputs'; };
 
@@ -164,27 +178,37 @@ If you build standalone Home Manager profiles via `home-manager.lib.homeManagerC
     };
 }
 
-### Step 2: Consume `self'` and `inputs'` in Home Manager Sub-Modules
+```
 
-Once injected into `extraSpecialArgs`, any nested module or file inside your Home Manager setup can access `self'` and `inputs'` directly from its top-level arguments:
+### Step C: Consume `self'` and `inputs'` in Home Manager Sub-Modules
 
+Once injected into `extraSpecialArgs`, any nested file inside your Home Manager configuration can access `self'` and `inputs'` directly:
+
+```nix
 # home/modules/desktop-apps.nix
 { config, pkgs, self', inputs', ... }:
 
 {
   home.packages = [
-    # Pull a package directly from a flake input without specifying 'x86_64-linux'
+    # Pull a package directly without specifying 'x86_64-linux'
     inputs'.ghostty.packages.default
 
-    # Pull a custom package/script defined in your own flake's perSystem outputs
+    # Pull a custom package defined in your own flake's perSystem outputs
     self'.packages.my-custom-script
   ];
 
-  # Example: Referencing custom Neovim or Hyprland packages from inputs
+  # Referencing custom packages from input flakes (e.g. NVF)
   programs.neovim.package = inputs'.nvf.packages.default;
 }
 
-### Why This Workflow Works Cleanly
+```
 
-1. **Architecture Neutrality:** Your Home Manager files do not contain hardcoded `x86_64-linux` strings. If you compile your configuration for an ARM device (`aarch64-linux`), `self'` and `inputs'` resolve the ARM package variants seamlessly.
-2. **Evaluation Parity:** Home Manager shares the exact same pre-configured `pkgs` and system dependencies evaluated by your host system, preventing Nixpkgs from evaluating duplicate package sets.
+---
+
+## Core Benefits
+
+* **Architecture Neutrality:** Your configuration files contain zero hardcoded `x86_64-linux` or `aarch64-linux` strings. Compiling for an ARM device resolves the ARM package variants automatically.
+* **Evaluation Parity:** Home Manager shares the exact same pre-configured `pkgs` instance evaluated by your host system, preventing Nixpkgs from evaluating duplicate package sets and reducing memory footprint.
+* **Scope Safety:** No complex attribute chaining or string interpolation inside deep nested submodules.
+  
+  [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]

@@ -243,3 +243,7 @@ nixosConfigurations.migration-sandbox = inputs.nixpkgs.lib.nixosSystem {
 4. Run your safety check: `nixos-rebuild build --dry-run --flake .#migration-sandbox`
 
 Does this match the exact staging/stub workflow we laid out so you can graduate files one by one without destroying your main environment?
+
+[[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
+[[Dendritic Nix Style Warpd]]
+[[Dendritic Nix Style Wlr-Which-Key]]

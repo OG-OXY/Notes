@@ -1,36 +1,43 @@
-The reason Nix is complaining about `allowUnfree` even after you put it in `config.nix`, `default.nix`, and `hardware.nix` is that **NixOS system builds evaluate a completely separate instance of `nixpkgs`** from the `perSystem.pkgs` defined in `parts.nix`.
+Here is the formatted, clean Obsidian Markdown note using proper syntax formatting, highlighted code blocks, callouts, and clean section breaks matching the style of your prior notes.
 
-If you set `_module.args.pkgs = import inputs.nixpkgs { inherit system; config.allowUnfree = true; };` inside `parts.nix`, that **only** fixes `allowUnfree` for `perSystem.packages` (like wrapped CLI/GUI tools). It **does not** touch the `pkgs` instance evaluated inside `nixosConfigurations`.
+```markdown
+# Handling `allowUnfree` with `flake-parts` & NixOS
 
-In NixOS, when you load the kernel module or packages for NVIDIA (`hardware.nvidia.package`, `services.xserver.videoDrivers = [ "nvidia" ]`), NixOS evaluates its internal `pkgs` parameter. If that module tree isn't explicitly told to allow unfree software, it throws the error.
+When building NixOS configurations using `flake-parts`, you may encounter unfree package evaluation errors (e.g., NVIDIA drivers, proprietary software) even after setting `allowUnfree = true` in standard system modules.
 
-### The 2 Fixes (Choose One)
+> [!warning] The Root Cause
+> **NixOS system builds evaluate a completely separate instance of `nixpkgs`** from the `perSystem.pkgs` defined in `parts.nix`.
+> 
+> Setting `_module.args.pkgs = import inputs.nixpkgs { inherit system; config.allowUnfree = true; };` inside `parts.nix` **only** configures `allowUnfree` for `perSystem.packages` (e.g., standalone CLI/GUI tools). It **does not** propagate to the `pkgs` instance evaluated internally by `nixosConfigurations`.
 
-#### Option A: Set `nixpkgs.config.allowUnfree = true;` inside `modulesWithSystem` (Recommended)
+---
 
-When using `modulesWithSystem` to generate your `nixosConfigurations`, you need to explicitly pass the unfree option inside the module block for that host.
+## Solutions
 
-In your host setup (or inside `modules/hosts/desktop.nix`):
+### Option A: Declare `nixpkgs.config.allowUnfree` in Host Modules (Recommended)
 
+When using `modulesWithSystem` to declare host configurations, explicitly pass the unfree option inside the module list evaluated by the system:
+
+```nix
 { modulesWithSystem, inputs, ... }:
 
 {
   flake.nixosConfigurations.desktop = modulesWithSystem (
     { self', pkgs, system, ... }:
     {
-      system = system;
+      inherit system;
       modules = [
-        # 1. THIS IS THE CRITICAL LINE FOR NVIDIA / SYSTEM UNFREE:
+        # 1. Enable unfree packages for this host evaluation:
         {
           nixpkgs.config.allowUnfree = true;
         }
 
-        # 2. Your driver and hardware setup
+        # 2. Hardware / Driver configuration:
         {
           services.xserver.videoDrivers = [ "nvidia" ];
           hardware.nvidia = {
             modesetting.enable = true;
-            open = false; # Proprietary NVIDIA driver is unfree
+            open = false; # Proprietary driver requires allowUnfree
           };
 
           environment.systemPackages = [
@@ -42,17 +49,22 @@ In your host setup (or inside `modules/hosts/desktop.nix`):
   );
 }
 
-#### Option B: Force NixOS to use `perSystem`'s `pkgs` directly
+```
 
-If you want NixOS to reuse the exact `pkgs` instance configured in `parts.nix` (which already has `allowUnfree = true` set), pass `pkgs` directly into `nixosSystem` or `modulesWithSystem`:
+---
 
+### Option B: Pass `perSystem.pkgs` Directly to Host
+
+To force NixOS to reuse the exact `pkgs` instance configured inside `parts.nix` (which already has `allowUnfree = true`), inject `pkgs` into the system definition:
+
+```nix
 { modulesWithSystem, ... }:
 
 {
   flake.nixosConfigurations.desktop = modulesWithSystem (
     { self', pkgs, ... }:
     {
-      # Pass perSystem's pkgs directly so NixOS doesn't re-evaluate nixpkgs
+      # Pass perSystem's pkgs directly so NixOS does not re-evaluate nixpkgs
       inherit pkgs;
 
       modules = [
@@ -66,20 +78,21 @@ If you want NixOS to reuse the exact `pkgs` instance configured in `parts.nix` (
   );
 }
 
-### Why putting it in `config.nix` / `default.nix` failed previously
+```
 
-If your `config.nix` or `default.nix` contained:
+---
 
-{ pkgs, ... }: {
-  nixpkgs.config.allowUnfree = true;
-}
+## Structural Breakdown
 
-...but was imported _outside_ or _before_ the `nixosConfigurations` module list evaluated, or if `pkgs` was hard-overridden at the flake level via `specialArgs`, the module system dropped or failed to merge `nixpkgs.config`.
+> [!info] Why standard module imports failed
+> If setting `nixpkgs.config.allowUnfree = true;` inside external files (like `config.nix` or `default.nix`) threw errors, it typically occurred because:
+> 1. The file was imported outside or before the `nixosConfigurations` module list evaluated.
+> 2. `pkgs` was hard-overridden at the flake level using `specialArgs`, causing the NixOS module system to drop or ignore merged `nixpkgs.config` settings.
+> 
+> 
 
-Putting `{ nixpkgs.config.allowUnfree = true; }` directly inside the `modules = [ ... ]` list passed into `modulesWithSystem` guarantees it evaluates during host compilation.
+Inlining `{ nixpkgs.config.allowUnfree = true; }` directly within the `modules = [ ... ]` block evaluated by `modulesWithSystem` guarantees the option is present during host evaluation.
 
-It really is a slick architecture once all those moving pieces click together! Having every app wrapped with its own config into a portable binary—while `modulesWithSystem` cleanly bridges `pkgs` and `allowUnfree` to your host—gives you a incredibly clean, zero-state setup.
-
-Have fun wiring it up! Let me know if any weird evaluation traces or missing binary PATH issues pop up when you run your first system rebuild.
+[[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
 [[Flake-parts options parts.nix]]
 [[580.xx.xx cachyos lto thin]]

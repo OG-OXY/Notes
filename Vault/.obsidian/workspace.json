@@ -118,9 +118,23 @@
               "icon": "lucide-file",
               "title": "Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact"
             }
+          },
+          {
+            "id": "99708ace3f3cbf68",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config"
+            }
           }
         ],
-        "currentTab": 7
+        "currentTab": 8
       }
     ],
     "direction": "vertical"
@@ -139,7 +153,7 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical",
+                "sortOrder": "byModifiedTime",
                 "autoReveal": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -284,34 +298,34 @@
       "bases:Create new base": false
     }
   },
-  "active": "34c8e04fec39d8b2",
+  "active": "99708ace3f3cbf68",
   "lastOpenFiles": [
-    "Dendritic Nix Style Wlr-Which-Key.md",
-    "Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact.md",
+    "REAL NixOS Modules From Scratch.md",
+    "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config.md",
     "formatLine, mapAttrsToList And The Beauty Of \"builtins.toJSON { ... }\" \"pkgs.formats.toml { }\" And \"pkgs.formats.ini { }\".md",
-    "Dendritic Nix Style Warpd.md",
+    "NixOS Module Mastery.md",
     "override, overrideAttrs, and oldAttrs.md",
+    "Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact.md",
+    "Flake parts self' and inputs'.md",
+    "Flake-parts options parts.nix.md",
+    "Flake parts fixes -system-.md",
+    "wlr-which-key_module_breakdown.md",
+    "The Way.md",
+    "Multi-Host Dendritic and publicly consumable nixosModules.md",
+    "Dendritic Nix Style Warpd.md",
+    "Dendritic Nix Style Wlr-Which-Key.md",
+    "TMUX Binds.md",
+    "Pure System-Wide Tooling & Fish Integration (Zero Home Manager).md",
     "Markdown syntax.md",
+    "systemdtmpfilesmodule.md",
     "GIT GUD VI BINDINGS viviumC + warpd.md",
     "JJ Workflow.md",
-    "Multi-Host Dendritic and publicly consumable nixosModules.md",
     "Untitled.base",
     "vimiumC.md",
     "& vs && and ; operator.md",
-    "Pure System-Wide Tooling & Fish Integration (Zero Home Manager).md",
-    "TMUX Binds.md",
     "Rust libraries.md",
     "test2.md",
     "vimiumC-Guide.md",
-    "test.md",
-    "Basics.md",
-    "580.xx.xx cachyos lto thin.md",
-    "Gamescope-Env settings.md",
-    "Sed-cli.md",
-    "systemdtmpfilesmodule.md",
-    "nixosmodulemastery.md",
-    "Anvil rust WM.md",
-    "Cleanest way to dendritic nix.md",
-    "Structuring dendritic home-manager modules and custom nixpkgs overlays.md"
+    "test.md"
   ]
 }
