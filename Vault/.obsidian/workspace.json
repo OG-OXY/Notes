@@ -300,6 +300,7 @@
   },
   "active": "99708ace3f3cbf68",
   "lastOpenFiles": [
+    "The_Way.md",
     "REAL NixOS Modules From Scratch.md",
     "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config.md",
     "formatLine, mapAttrsToList And The Beauty Of \"builtins.toJSON { ... }\" \"pkgs.formats.toml { }\" And \"pkgs.formats.ini { }\".md",
@@ -325,7 +326,6 @@
     "& vs && and ; operator.md",
     "Rust libraries.md",
     "test2.md",
-    "vimiumC-Guide.md",
-    "test.md"
+    "vimiumC-Guide.md"
   ]
 }
