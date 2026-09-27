@@ -1,26 +1,8 @@
 # Combining Dendritic Layout (`import-tree`) with `flake-parts`
-
-
-
-
-Combining your **dendritic layout** (=import-tree=) with =flake-parts= eliminates manual =lib.evalModules= calls in =flake.nix=.
-
-
-
-By letting a dedicated module file return a =flake-parts= module (with =perSystem= and =flake.nixosModules=), =import-tree= automatically discovers and evaluates your Ghostty configuration just like your UWSM, Niri, and Noctalia modules.
-
-
-
+>Combining your **dendritic layout** `(import-tree)` with `flake-parts` eliminates manual `lib.evalModules` calls in `flake.nix`.
+By letting a dedicated module file return a `flake-parts` module (with `perSystem` and `flake.nixosModules`), `import-tree` automatically discovers and evaluates your Ghostty configuration just like your UWSM, Niri, and Noctalia modules.
 ___
-
-
-
-
 ## File Structure
-
-
-
-
 ```text
 .
 ├── flake.nix
@@ -31,23 +13,9 @@ ___
         └── my-ghostty.nix    # flake-parts module (Your settings + output binding)
 
 ```
-
-
-
 ___
-
-
-
-
-### Step 1: =modules/programs/ghostty.nix= (The Engine / NixOS Option Schema)
-
-
-
-
-Keep this pure as a standard NixOS/Home Manager module schema.
-
-
-
+### Step 1: `modules/programs/ghostty.nix` (The Engine / NixOS Option Schema)
+>Keep this pure as a standard NixOS/Home Manager module schema.
 ```nix
 { config, lib, pkgs, ... }:
 
@@ -119,23 +87,10 @@ in
 }
 
 ```
-
-
-
 ___
-
-
-
-
-### Step 2: =modules/programs/my-ghostty.nix= (The Flake-Parts Integration)
-
-
-
-
-This turns Ghostty into a native dendritic module. It uses =lib.evalModules= **internally inside =perSystem=**, so =flake.nix= never has to think about it.
-
-
-
+### Step 2: `modules/programs/my-ghostty.nix` (The Flake-Parts Integration)
+>This turns Ghostty into a native dendritic module. It uses `lib.evalModules` internally inside `perSystem`, so `flake.nix` never has to think about it.
+___
 ```nix
 { self, inputs, ... }:
 
@@ -188,22 +143,13 @@ This turns Ghostty into a native dendritic module. It uses =lib.evalModules= **i
 }
 
 ```
-
-
-
 ___
-
-
-
-
-### Step 3: =flake.nix= (Zero Logic / Fully Dendritic)
-
-
-
-
-_modules= Your =flakenix= stays completely untouched regardless of how many packages or system modules you add
-
-_```nix
+### Step 3: `flake.nix` (Zero Logic / Fully Dendritic)
+> [!NOTE] 
+> Your `flake.nix` stays completely untouched regardless of how many packages or system modules you add.
+> 
+___
+```nix
 {
   description = "Nix Dendritic Flake";
 
@@ -212,10 +158,12 @@ _```nix
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:vic/import-tree";
     wrappers.url = "github:BirdeeHub/nix-wrapper-modules";
+
     chaotic = {
       url = "github:chaotic-cx/nyx";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -227,66 +175,3 @@ _```nix
       imports = import-tree ./modules;
     };
 }
-
-```
-
-
-
-___
-
-
-
-
-### Step 4: =modules/parts.nix= (Global Config)
-
-
-
-
-Keep global flake setup (like =systems= and =cudaSupport= overrides) isolated in its own file under =./modules=:
-
-
-
-```nix
-{ inputs, ... }:
-
-{
-  imports = [
-    inputs.wrappers.flakeModules.wrappers
-    inputs.home-manager.flakeModules.home-manager
-  ];
-
-  systems = [
-    "x86_64-linux"
-    "aarch64-linux"
-  ];
-
-  perSystem = { system, ... }: {
-    _module.args.pkgs = import inputs.nixpkgs {
-      inherit system;
-      config = {
-        allowUnfree = true;
-        allowUnfreePredicate = _: true;
-        cudaSupport = true;
-        cudaCapabilities = [ "6.1" ];
-      };
-    };
-  };
-}
-
-```
-
-
-
-___
-
-
-
-
-### Summary of Benefits
-
-
-
-
-- **=flake.nix= is under 25 lines:** It only declares inputs and calls =import-tree ./modules=.
-- **Every module is self-contained:** =my-ghostty.nix= handles both its package evaluation via =perSystem= and exports =nixosModules.ghostty= via =flake=.
-- **No manual =flake.nix= edits:** Adding a new program is as simple as creating a file in =modules/programs/=. =import-tree= hooks it up automatically.
