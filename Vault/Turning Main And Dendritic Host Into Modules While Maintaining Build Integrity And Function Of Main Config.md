@@ -381,6 +381,8 @@ sudo nixos-rebuild switch --flake .#dendritic
 [[Dendritic Nix Style Warpd]]
 [[Dendritic Nix Style Wlr-Which-Key]]
 [[Avoid Import-Tree?]]
+[[Dendritic Nix Working Flake-Parts Module]]
+[[Putting Programs Config and Custom PKGS in perSystem]]
 # Flake-Parts Advice
 [[Flake-parts options parts.nix]]
 [[Flake parts self' and inputs']]
