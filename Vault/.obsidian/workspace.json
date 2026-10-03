@@ -11,256 +11,42 @@
             "id": "792288625c0a0413",
             "type": "leaf",
             "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          },
+          {
+            "id": "5ceac680e45a2f4f",
+            "type": "leaf",
+            "state": {
               "type": "markdown",
               "state": {
-                "file": "TMUX Binds.md",
+                "file": "Learning to Code and Frameworks.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "TMUX Binds"
+              "title": "Learning to Code and Frameworks"
             }
           },
           {
-            "id": "bc056553743229c6",
+            "id": "86b0bd1477a0067e",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Pure System-Wide Tooling & Fish Integration (Zero Home Manager).md",
+                "file": "Meta Languages.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Pure System-Wide Tooling & Fish Integration (Zero Home Manager)"
-            }
-          },
-          {
-            "id": "6f77f16613fe1872",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Markdown syntax.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Markdown syntax"
-            }
-          },
-          {
-            "id": "c3b9465490cba77a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "override, overrideAttrs, and oldAttrs.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "override, overrideAttrs, and oldAttrs"
-            }
-          },
-          {
-            "id": "ee0228fddc32abbc",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Dendritic Nix Style Warpd.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Dendritic Nix Style Warpd"
-            }
-          },
-          {
-            "id": "192637b8e902b9c3",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Dendritic Nix Style Wlr-Which-Key.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Dendritic Nix Style Wlr-Which-Key"
-            }
-          },
-          {
-            "id": "5bb5610743e26699",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Dendritic Nix Style Wlr-Which-Key.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Dendritic Nix Style Wlr-Which-Key"
-            }
-          },
-          {
-            "id": "34c8e04fec39d8b2",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact"
-            }
-          },
-          {
-            "id": "99708ace3f3cbf68",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config"
-            }
-          },
-          {
-            "id": "ff772b604e018acd",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config"
-            }
-          },
-          {
-            "id": "961a454c084b88eb",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Import&Filter Hosts NixOS&Dendritic.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Import&Filter Hosts NixOS&Dendritic"
-            }
-          },
-          {
-            "id": "d82ff0fcb8332f54",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Import&Filter Hosts NixOS&Dendritic.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Import&Filter Hosts NixOS&Dendritic"
-            }
-          },
-          {
-            "id": "43cc1ee65669e516",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config"
-            }
-          },
-          {
-            "id": "47f67bd3e3812a34",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "mkHost Helper Function.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "mkHost Helper Function"
-            }
-          },
-          {
-            "id": "85cf05fc6b9415a9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config"
-            }
-          },
-          {
-            "id": "0fc1aa3917fdccdf",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config"
-            }
-          },
-          {
-            "id": "45864dc9a3760b27",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config"
-            }
-          },
-          {
-            "id": "f6e372e8bf2ae2c9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Example On Configuring Program With Module Wiring.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Example On Configuring Program With Module Wiring"
+              "title": "Meta Languages"
             }
           }
         ],
-        "currentTab": 17
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -424,34 +210,35 @@
       "bases:Create new base": false
     }
   },
-  "active": "f6e372e8bf2ae2c9",
+  "active": "86b0bd1477a0067e",
   "lastOpenFiles": [
+    "Learning to Code and Frameworks.md",
+    "Meta Languages.md",
+    "TMUX Binds.md",
+    "github-recovery-codes.md",
+    "github-recovery-codes.txt",
+    "Pure System-Wide Tooling & Fish Integration (Zero Home Manager).md",
+    "Markdown syntax.md",
+    "override, overrideAttrs, and oldAttrs.md",
+    "Dendritic Nix Style Warpd.md",
+    "Dendritic Nix Style Wlr-Which-Key.md",
+    "Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact.md",
     "Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config.md",
+    "Import&Filter Hosts NixOS&Dendritic.md",
+    "mkHost Helper Function.md",
+    "Infinite Recursion Bug?.md",
     "Example On Configuring Program With Module Wiring.md",
     "Putting Programs Config and Custom PKGS in perSystem (Runnable As Standalone Binary With Github Link + Path, Pkg Name.md",
     "Making Dendrite Modules Runnable As Standalone Packages Via Github Link + Path + PKG Name.md",
     "Dendritic Nix Working Flake-Parts Module.md",
-    "mkHost Helper Function.md",
-    "Import&Filter Hosts NixOS&Dendritic.md",
-    "Infinite Recursion Bug?.md",
     "Avoid Import-Tree?.md",
     "The_Way.md",
     "UWSM APP.md",
     "REAL NixOS Modules From Scratch.md",
     "formatLine, mapAttrsToList And The Beauty Of \"builtins.toJSON { ... }\" \"pkgs.formats.toml { }\" And \"pkgs.formats.ini { }\".md",
     "NixOS Module Mastery.md",
-    "override, overrideAttrs, and oldAttrs.md",
-    "Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact.md",
     "Flake parts self' and inputs'.md",
     "Flake-parts options parts.nix.md",
-    "Flake parts fixes -system-.md",
-    "wlr-which-key_module_breakdown.md",
-    "The Way.md",
-    "Multi-Host Dendritic and publicly consumable nixosModules.md",
-    "Dendritic Nix Style Warpd.md",
-    "Dendritic Nix Style Wlr-Which-Key.md",
-    "TMUX Binds.md",
-    "Pure System-Wide Tooling & Fish Integration (Zero Home Manager).md",
     "Untitled.base"
   ]
 }
