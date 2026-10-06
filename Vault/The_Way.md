@@ -178,7 +178,9 @@ ___
 ```
 
 # Main Dendritic Guides
+[[THE WAY]]
 [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
+[[The_Way 1]]
 [[Import&Filter Hosts NixOS&Dendritic]]
 [[Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact]]
 [[Dendritic Nix Style Warpd]]

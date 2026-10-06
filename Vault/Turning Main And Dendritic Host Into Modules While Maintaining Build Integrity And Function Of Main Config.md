@@ -376,7 +376,7 @@ sudo nixos-rebuild switch --flake .#dendritic
 ```
 
 # Main Dendritic Guides
-[[The_Way]]
+[[THE WAY]]
 [[Import&Filter Hosts NixOS&Dendritic]]
 [[Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact]]
 [[Dendritic Nix Style Warpd]]
