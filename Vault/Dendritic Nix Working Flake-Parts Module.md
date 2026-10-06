@@ -265,5 +265,6 @@ flake.nixosConfigurations.NixOS = inputs.nixpkgs.lib.nixosSystem {
 
 This prevents the circular/invalid `flake` evaluation error while making `import-tree ./Imports` automatically populate and activate your modules system-wide.
 
+[[THE WAY]]
 [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
 [[Import&Filter Hosts NixOS&Dendritic]]

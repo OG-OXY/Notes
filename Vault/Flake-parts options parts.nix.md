@@ -198,4 +198,5 @@ In `flake-parts`, top-level configuration options live within the context of `mk
 * **`modulesWithSystem`**: Provided by `flake-parts.flakeModules.modulesWithSystem`. Bridges system-specific artifacts into global modules so `flake.nixosConfigurations` can reference `self'.packages` cleanly.
 * **`imports` / `options` / `config**`: Leverages the standard Nix module system at the flake evaluation level, enabling multi-file modular layouts (dendritic patterns).
   
+  [[THE WAY]]
   [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]

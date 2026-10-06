@@ -37,3 +37,5 @@ To navigate these non-web pages without grabbing the mouse:
     bind = $mainMod, G, exec, warpd --hint
     
     Pressing `SUPER + G` overlays letters across the screen. Typing the letters teleports the cursor and left-clicks, handling internal browser menus, upload dialogs, or rogue web interfaces seamlessly.
+   
+[[THE WAY]] 

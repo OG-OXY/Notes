@@ -120,5 +120,6 @@ nix run github:yourusername/yourrepo#wlr-which-key -- --menu apps
 
 Nix will pull down `wlr-which-key`, build the temporary YAML configs, fetch the necessary dependencies into the store, and launch your menus on the spot.
 
+[[THE WAY]]
 [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
 [[Import&Filter Hosts NixOS&Dendritic]]

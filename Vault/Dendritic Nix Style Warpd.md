@@ -142,5 +142,6 @@ Combining the native C wrapper, correct option defaults, and `perSystem` + `flak
 * **Zero Home Manager / Dotfiles**: Everything lives strictly inside `/nix/store`, completely immutable and decoupled from user home directory paths.
 
 [[Dendritic Nix Style Wlr-Which-Key]]
+[[THE WAY]]
 [[Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact]]
 [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]

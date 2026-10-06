@@ -267,4 +267,5 @@ To make this custom module's package output executable via `nix run .#ghostty` *
 > 2. **Standalone Runner Target:** `perSystem.packages.ghostty` $\rightarrow$ Isolated evaluation via `lib.evalModules` for instant execution via `nix run`.
 >    
 
+[[THE WAY]]
 [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]

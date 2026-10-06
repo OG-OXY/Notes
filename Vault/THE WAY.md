@@ -165,6 +165,7 @@ nixosConfigurations.myHost = nixpkgs.lib.nixosSystem {
 
 No manual `imports = [ ... ]` lines inside host configs, no re-declaring `settings = { ... }`, and zero manual wiring needed anywhere!
 # Main Dendritic Guides
+[[mkHost Helper Function]]
 [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
 [[The_Way 1]]
 [[Import&Filter Hosts NixOS&Dendritic]]
@@ -185,12 +186,16 @@ No manual `imports = [ ... ]` lines inside host configs, no re-declaring `settin
 [[Variants Of pkgs.write And pkgs.run]]
 [[formatLine, mapAttrsToList And The Beauty Of builtins.toJSON, pkgs.formats.toml, And pkgs.formats.ini]]
 [[override, overrideAttrs, and oldAttrs]]
+[[systemdtmpfilesmodule]]
+[[Structuring dendritic home-manager modules and custom nixpkgs overlays]]
+[[Example On Configuring Program With Module Wiring]]
 # Extras and Advice On Dendritic Nix
 [[Multi-Host Dendritic and publicly consumable nixosModules]]
 [[File-system Organization and ASCII Priority]]
 [[& vs && and ; operator]]
 [[Sed-cli]]
 [[vimiumC]]
+[[GIT GUD VI BINDINGS viviumC + warpd]]
 [[Markdown syntax]]
 [[JJ Workflow]]
 # Get an Infinite Recursion Error?

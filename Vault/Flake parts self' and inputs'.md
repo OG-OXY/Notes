@@ -211,4 +211,5 @@ Once injected into `extraSpecialArgs`, any nested file inside your Home Manager 
 * **Evaluation Parity:** Home Manager shares the exact same pre-configured `pkgs` instance evaluated by your host system, preventing Nixpkgs from evaluating duplicate package sets and reducing memory footprint.
 * **Scope Safety:** No complex attribute chaining or string interpolation inside deep nested submodules.
   
+  [[THE WAY]]
   [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]

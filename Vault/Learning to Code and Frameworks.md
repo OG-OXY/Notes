@@ -59,3 +59,5 @@ If you want to move the needle on technology itself:
 1. **Do not focus on mastering UI framework wrappers.** Treat Electron or Tauri purely as optional shell utilities—things you wire up in an afternoon if an engine needs a quick interface.
 2. **Master foundational primitives.** Focus on memory layout, cache locality, compiler theory, asynchronous execution models, unsafe Rust correctness, and hardware interfaces.
 3. **Study production breakthroughs.** Look at how high-performance tools like **Zed** (`gpui`), **Ruff** (extreme-performance Python tooling in Rust), or **Deno/Bun** (runtime architecture) are built under the hood. None of them rely on Webview wrappers to push the state of the art forward.
+   
+   [[THE WAY]]

@@ -23,3 +23,5 @@ notes.txt
 ```
 
 If you ever want to leverage symbols even further, `_` and `~` sit at opposite ends of the spectrum—`_` (ASCII 95) sits above capital letters, while `~` (ASCII 126) sits at the absolute bottom below lowercase letters, giving you a top-pin and a bottom-pin character.
+
+[[THE WAY]]

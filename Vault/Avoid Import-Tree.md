@@ -108,4 +108,5 @@ If you wanted to use pure Nixpkgs features without relying on the `import-tree` 
 * Use **Option 2** if you want zero external dependencies for file discovery and want exact, explicit control via native `nixpkgs.lib.fileset`.
   
 [[Import&Filter Hosts NixOS&Dendritic]]
+[[THE WAY]]
 [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]

@@ -130,5 +130,6 @@ Now, creating new NixOS configurations for any machine becomes trivial:
 1. **DRY (Don't Repeat Yourself):** Standard options like `specialArgs`, base overlays, and unfree flags live in **one place**. If you update an overlay or a global setting, every host inherits it automatically.
 2. **Infinite Multi-System Scaling:** Adding an ARM machine (like a Raspberry Pi or Apple Silicon VM) is as simple as passing `system = "aarch64-linux"`. The helper sets `nixpkgs.hostPlatform` cleanly without breaking your main `x86_64-linux` desktop build.
 3. **Decoupled Host Modules:** Each host directory under `Hosts/<name>/` only needs to contain hardware-specific settings, disk configurations, and host-specific toggles (e.g. `programs.niri.enable = true;`).
+   [[THE WAY]]
    [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
    [[Import&Filter Hosts NixOS&Dendritic]]

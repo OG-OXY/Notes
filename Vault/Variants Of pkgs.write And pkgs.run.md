@@ -245,7 +245,6 @@ myWrappedLauncher = pkgs.runCommandLocal "gamescope-steam-launcher" {} ''
 | **`runCommand`**          | Whatever `$out` creates        | Custom          | Standard minimal sandbox execution (no C compiler).                       |
 | **`runCommandCC`**        | Whatever `$out` creates        | Custom          | Sandbox execution with full C/C++ compiler toolchain loaded.              |
 | **`runCommandLocal`**     | Whatever `$out` creates        | Custom          | Fast local-only sandbox execution (bypasses build farms & cache lookups). |
+[[THE WAY]]
 [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
-
-[[]]
 [[Making Dendrite Modules Runnable As Standalone Packages Via Github Link + Path + PKG Name]]

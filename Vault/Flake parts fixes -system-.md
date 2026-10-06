@@ -93,6 +93,7 @@ To force NixOS to reuse the exact `pkgs` instance configured inside `parts.nix` 
 
 Inlining `{ nixpkgs.config.allowUnfree = true; }` directly within the `modules = [ ... ]` block evaluated by `modulesWithSystem` guarantees the option is present during host evaluation.
 
+[[THE WAY]]
 [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
 [[Flake-parts options parts.nix]]
 [[580.xx.xx cachyos lto thin]]

@@ -279,3 +279,5 @@ imports = [
 ```
 
 Because host files live outside `./Imports/Modules`, `self.nixosModules` **only** contains feature modules (`warpd`, `uwsm`, `niri`). You can safely use `lib.attrValues self.nixosModules` in any host without recursion filters.
+
+[[THE WAY]]
