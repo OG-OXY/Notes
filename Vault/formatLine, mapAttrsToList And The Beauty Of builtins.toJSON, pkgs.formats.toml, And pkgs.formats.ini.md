@@ -19,3 +19,5 @@ Because different programs use different config formats, you don't always have t
 When you use those, Nix automatically converts your native Nix attribute sets—booleans, strings, lists, integers, and nested sets—into perfectly formatted, valid configuration files in `/nix/store` automatically.
 
 Combine that with `pkgs.symlinkJoin` and `makeBinaryWrapper`, and you get pure, high-performance C wrappers with zero Home Manager, zero dotfiles, zero extra shell processes, and 100% self-contained code in a single `.nix` file.
+
+[[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]

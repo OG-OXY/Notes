@@ -175,3 +175,35 @@ ___
       imports = import-tree ./modules;
     };
 }
+```
+
+# Main Dendritic Guides
+[[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
+[[Import&Filter Hosts NixOS&Dendritic]]
+[[Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact]]
+[[Dendritic Nix Style Warpd]]
+[[Dendritic Nix Style Wlr-Which-Key]]
+[[Avoid Import-Tree]]
+[[Dendritic Nix Working Flake-Parts Module]]
+[[Putting Programs Config and Custom PKGS in perSystem (Runnable As Standalone Binary With Github Link + Path, Pkg Name]]
+# Flake-Parts Advice
+[[Flake-parts options parts.nix]]
+[[Flake parts self' and inputs']]
+[[Flake parts fixes -system-]]
+[[Making Dendrite Modules Runnable As Standalone Packages Via Github Link + Path + PKG Name]]
+# Major Weapons Ill Need To Complete This Task.
+[[NixOS Module Mastery]]
+[[REAL NixOS Modules From Scratch]]
+[[Variants Of pkgs.write And pkgs.run]]
+[[formatLine, mapAttrsToList And The Beauty Of builtins.toJSON, pkgs.formats.toml, And pkgs.formats.ini]]
+[[override, overrideAttrs, and oldAttrs]]
+# Extras and Advice On Dendritic Nix
+[[Multi-Host Dendritic and publicly consumable nixosModules]]
+[[File-system Organization and ASCII Priority]]
+[[& vs && and ; operator]]
+[[Sed-cli]]
+[[vimiumC]]
+[[Markdown syntax]]
+[[JJ Workflow]]
+# Get an Infinite Recursion Error?
+[[Infinite Recursion Bug]]
