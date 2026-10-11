@@ -3,9 +3,7 @@
 You are 100% right. Having to write out that massive `settings = { ... }` block twice—once inside `perSystem` via `lib.evalModules` and again inside `flake.nixosModules.ghostty`—is redundant duplication (DRY violation).
 
 And you hit the nail on the head regarding **true dendritic architecture**: if you pass `builtins.attrValues self.nixosModules` directly into your `nixosSystem { modules = ... }` list inside `flake.nix`, the system automatically imports *every* discovered engine module (`ghosttyModule`) AND preset module (`ghostty`). Having to manually type out individual `self.nixosModules.ghostty` entries inside host configs completely misses the point of using `import-tree`.
-
 ### The True "Single Source of Truth" Architecture
-
 By leveraging `perSystem` as the **sole site where the settings map is built and evaluated**, `packages.myGhostty` becomes the single source of truth for the fully configured wrapper.
 
 Then, the NixOS system module doesn't re-declare configuration keys or re-format text files; it simply takes that pre-evaluated package from `self.packages.${pkgs.stdenv.hostPlatform.system}.myGhostty` (or `perSystem` package binding), enables it, and attaches the package to the system profile.
@@ -147,7 +145,6 @@ Here is the ultra-clean, non-redundant, true dendritic pattern:
 ```
 
 ---
-
 ### Why This is Peak Architectural Cleanliness:
 
 1. **Zero Repetition (DRY):** All Ghostty settings (`theme`, `font-family`, `font-size`, etc.) are declared **exactly once** inside `perSystem`.
@@ -167,7 +164,6 @@ No manual `imports = [ ... ]` lines inside host configs, no re-declaring `settin
 # Main Dendritic Guides
 [[mkHost Helper Function]]
 [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
-[[The_Way 1]]
 [[Import&Filter Hosts NixOS&Dendritic]]
 [[Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact]]
 [[Dendritic Nix Style Warpd]]
@@ -191,13 +187,16 @@ No manual `imports = [ ... ]` lines inside host configs, no re-declaring `settin
 [[Example On Configuring Program With Module Wiring]]
 # Extras and Advice On Dendritic Nix
 [[Multi-Host Dendritic and publicly consumable nixosModules]]
-[[File-system Organization and ASCII Priority]]
-[[& vs && and ; operator]]
-[[Sed-cli]]
 [[vimiumC]]
 [[GIT GUD VI BINDINGS viviumC + warpd]]
-[[Markdown syntax]]
+# Basic Linux Knowledge
+[[Shell Redirecting to stdout & stderr + null]]
+[[& vs && and ; operator]]
+[[Sed-cli]]
 [[JJ Workflow]]
+[[File-system Organization and ASCII Priority]]
+[[Yaml Syntax]]
+[[Markdown syntax]]
 # Get an Infinite Recursion Error?
 [[Infinite Recursion Bug]]
 ## The Previous Draft V0.5.0
@@ -209,7 +208,6 @@ By exposing the engine in `flake.nixosModules.ghosttyModule` inside the first fi
 Here is the exact refined implementation ("The_Way Final") that resolves all of your inline questions, strips out the `with lib;` statement, cleans up the option schema, and links `perSystem.packages` directly to the `flake.nixosModules` configuration.
 
 ---
-
 ### Refined File Structure
 
 ```text
@@ -225,7 +223,6 @@ Here is the exact refined implementation ("The_Way Final") that resolves all of 
 *(Notice: You don't even need two separate files per program anymore! We can combine both the engine definition and the system instantiation into a single auto-discovered file).*
 
 ---
-
 ### `modules/programs/ghostty.nix` (The Unified Dendritic Engine)
 
 ```nix
@@ -386,25 +383,21 @@ Here is the exact refined implementation ("The_Way Final") that resolves all of 
 ```
 
 ---
-
 ### Clarifications on Your Specific Questions & Comments
 
 1. **Why remove `with lib;`?**
 * You were completely right to question it. `with lib;` introduces scope ambiguity, masks variable shadows, and causes performance slowdowns in evaluation. Explicitly referencing `lib.mkOption`, `lib.mkIf`, and `lib.concatStringsSep` is standard practice for production-grade Flakes.
 
-
-2. **How does `self.nixosModules.ghosttyModule` eliminate `imports = [ ./ghostty.nix ];`?**
+1. **How does `self.nixosModules.ghosttyModule` eliminate `imports = [ ./ghostty.nix ];`?**
 * Because `import-tree` gathers every file inside `./modules` and feeds them into `flake-parts`, any top-level attribute assigned to `flake.nixosModules.<name>` becomes directly available on `self.nixosModules.<name>`.
 * When you reference `self.nixosModules.ghosttyModule` inside `perSystem` or `flake.nixosModules.ghostty`, you are pointing directly to the evaluated flake output rather than a relative path on disk.
 
-
-3. **Can I execute this with `nix run`?**
+1. **Can I execute this with `nix run`?**
 * **Yes!** Because `perSystem` exposes `packages.myGhostty`, you can run:
 ```bash
 nix run .#myGhostty
 
 ```
-
 
 or build the configured wrapper directly:
 ```bash
@@ -412,8 +405,217 @@ nix build .#myGhostty
 
 ```
 
-
-
-
 4. **How do I consume this in my main NixOS host configuration?**
 * Inside your machine's `configuration.nix` or host module, you simply import `inputs.self.nixosModules.ghostty` (or `self.nixosModules.ghostty`), and it automatically toggles on your custom-wrapped terminal with all options loaded!
+___
+# First Draft
+# Combining Dendritic Layout (`import-tree`) with `flake-parts`
+>Combining your **dendritic layout** `(import-tree)` with `flake-parts` eliminates manual `lib.evalModules` calls in `flake.nix`.
+By letting a dedicated module file return a `flake-parts` module (with `perSystem` and `flake.nixosModules`), `import-tree` automatically discovers and evaluates your Ghostty configuration just like your UWSM, Niri, and Noctalia modules.
+___
+## File Structure
+```text
+.
+├── flake.nix
+└── modules/
+    ├── parts.nix             # Flake-wide settings (systems, nixpkgs config)
+    └── programs/
+        ├── ghostty.nix       # Option schema & derivation engine
+        └── my-ghostty.nix    # flake-parts module (Your settings + output binding)
+
+```
+___
+### Step 1: `modules/programs/ghostty.nix` (The Engine / NixOS Option Schema)
+>Keep this pure as a standard NixOS/Home Manager module schema.
+```nix
+{ config, lib, pkgs, ... }:
+
+with lib;
+
+let
+  cfg = config.mySystem.programs.ghostty;
+
+  formatKeyValue = k: v:
+    if isList v then
+      concatStringsSep "\n" (map (item: "${k} = ${toString item}") v)
+    else if isBool v then
+      "${k} = ${if v then "true" else "false"}"
+    else
+      "${k} = ${toString v}";
+
+  ghosttyConfigContent = concatStringsSep "\n" (
+    mapAttrsToList formatKeyValue cfg.settings
+  );
+
+  ghosttyConfigFile = pkgs.writeText "ghostty-config" ghosttyConfigContent;
+
+  wrappedGhostty = pkgs.symlinkJoin {
+    name = "ghostty-configured-${pkgs.ghostty.version}";
+    paths = [ pkgs.ghostty ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/ghostty \
+        --add-flags "--config-file=${ghosttyConfigFile}"
+    '';
+  };
+in
+{
+  options.mySystem.programs.ghostty = {
+    enable = mkEnableOption "Custom wrapped Ghostty terminal";
+
+    enableFishIntegration = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable shell integration hooks for Fish.";
+    };
+
+    settings = mkOption {
+      type = types.attrsOf (types.oneOf [
+        types.str
+        types.int
+        types.float
+        types.bool
+        (types.listOf types.str)
+      ]);
+      default = {};
+      description = "Raw Ghostty key-value configuration options.";
+    };
+
+    package = mkOption {
+      type = types.package;
+      default = wrappedGhostty;
+      description = "The final wrapped Ghostty package output.";
+    };
+  };
+
+  config = mkIf cfg.enable {
+    environment.systemPackages = [ cfg.package ];
+
+    programs.fish.vendor.configDirs = mkIf (cfg.enableFishIntegration && config ? programs.fish) [
+      "${pkgs.ghostty}/share/fish/vendor_conf.d"
+    ];
+  };
+}
+
+```
+___
+### Step 2: `modules/programs/my-ghostty.nix` (The Flake-Parts Integration)
+>This turns Ghostty into a native dendritic module. It uses `lib.evalModules` internally inside `perSystem`, so `flake.nix` never has to think about it.
+___
+```nix
+{ self, inputs, ... }:
+
+{
+  perSystem = { pkgs, ... }:
+    let
+      # Evaluates the engine and settings locally within perSystem
+      eval = pkgs.lib.evalModules {
+        modules = [
+          ./ghostty.nix
+          {
+            mySystem.programs.ghostty = {
+              enable = true;
+              enableFishIntegration = true;
+              settings = {
+                theme = "Aurora";
+                background-opacity = 1.0;
+                adjust-cell-height = "-10%";
+                adjust-cell-width = "-10%";
+                cursor-style = "block";
+                grapheme-width-method = "legacy";
+                shell-integration-features = "no-cursor";
+                scrollback-limit = 100000000;
+                font-family = "JetBrainsMono NFM Bold";
+                font-family-bold = "JetBrainsMono NFM ExtraBold";
+                font-family-italic = "JetBrainsMono NFM Bold Italic";
+                font-family-bold-italic = "JetBrainsMono NFM ExtraBold Italic";
+                font-size = 22;
+                font-feature = [
+                  "liga"
+                  "calt"
+                ];
+              };
+            };
+          }
+        ];
+        specialArgs = { inherit pkgs; };
+      };
+    in
+    {
+      # Exposes the evaluated package directly under `packages.myGhostty`
+      packages.myGhostty = eval.config.mySystem.programs.ghostty.package;
+    };
+
+  # Exposes the system module export clean for downstream NixOS consumption
+  flake.nixosModules.ghostty = { pkgs, ... }: {
+    imports = [ ./ghostty.nix ];
+    mySystem.programs.ghostty.enable = true;
+  };
+}
+
+```
+___
+### Step 3: `flake.nix` (Zero Logic / Fully Dendritic)
+> [!NOTE] 
+> Your `flake.nix` stays completely untouched regardless of how many packages or system modules you add.
+> 
+___
+```nix
+{
+  description = "Nix Dendritic Flake";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
+    wrappers.url = "github:BirdeeHub/nix-wrapper-modules";
+
+    chaotic = {
+      url = "github:chaotic-cx/nyx";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = inputs@{ flake-parts, import-tree, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = import-tree ./modules;
+    };
+}
+```
+
+# Main Dendritic Guides
+#flake-parts 
+[[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
+[[Import&Filter Hosts NixOS&Dendritic]]
+[[Migrating To Dendritic Nix Safely With My Main Configuration Staying Intact]]
+[[Dendritic Nix Style Warpd]]
+[[Dendritic Nix Style Wlr-Which-Key]]
+[[Avoid Import-Tree]]
+[[Dendritic Nix Working Flake-Parts Module]]
+[[Putting Programs Config and Custom PKGS in perSystem (Runnable As Standalone Binary With Github Link + Path, Pkg Name]]
+# Flake-Parts Advice
+[[Flake-parts options parts.nix]]
+[[Flake parts self' and inputs']]
+[[Flake parts fixes -system-]]
+[[Making Dendrite Modules Runnable As Standalone Packages Via Github Link + Path + PKG Name]]
+# Major Weapons Ill Need To Complete This Task.
+[[NixOS Module Mastery]]
+[[REAL NixOS Modules From Scratch]]
+[[Variants Of pkgs.write And pkgs.run]]
+[[formatLine, mapAttrsToList And The Beauty Of builtins.toJSON, pkgs.formats.toml, And pkgs.formats.ini]]
+[[override, overrideAttrs, and oldAttrs]]
+# Extras and Advice On Dendritic Nix
+[[Multi-Host Dendritic and publicly consumable nixosModules]]
+[[File-system Organization and ASCII Priority]]
+[[& vs && and ; operator]]
+[[Sed-cli]]
+[[vimiumC]]
+[[Markdown syntax]]
+[[JJ Workflow]]
+# Get an Infinite Recursion Error?
+[[Infinite Recursion Bug]]
