@@ -177,7 +177,7 @@ Both hosts now live cleanly inside `./Imports/Hosts/`, providing a unified struc
 ___
 # Related
 [[Turning Main And Dendritic Host Into Modules While Maintaining Build Integrity And Function Of Main Config]]
-[[Infinite Recursion Bug?]]
+[[1791723236-USPT|Infinite Recursion Bug?]]
 [[Avoid Import-Tree?]]
 
 # Main vs. Dendritic: `why the hostname filter?`

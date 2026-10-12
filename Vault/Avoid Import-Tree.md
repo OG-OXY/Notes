@@ -1,3 +1,8 @@
+---
+id: Avoid Import-Tree
+aliases: []
+tags: []
+---
 That original snippet mixed two completely separate ways of handling file imports in Nix. That's why `importTreeFiltered` was just sitting there dead—`import-tree` is its own library, and `lib.fileset` is a built-in Nixpkgs tool. They don't talk to each other directly.
 
 To fix this, you have **two clean options**:
