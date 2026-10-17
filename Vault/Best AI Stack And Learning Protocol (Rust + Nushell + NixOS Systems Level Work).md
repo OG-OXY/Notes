@@ -1,0 +1,81 @@
+**Best free stack for your exact goals (Rust job ASAP + Nix mastery + Nushell + systems-level work on NixOS):**
+
+### 1. Daily Driver Cloud Free Tiers (highest quality right now)
+These are the strongest free options in late 2026:
+
+| Tool / Model | Best For | Limits (approx) | Why it fits you |
+|--------------|----------|-----------------|-----------------|
+| **Gemini (Google AI Studio / Gemini app + Antigravity CLI)** | Broad systems reasoning, large context, Nix architecture, research | Very generous daily requests on Flash models | Excellent at structured thinking and long configs. Great for explaining complex Nix modules and systems design. |
+| **Grok (me) / xAI free tier** | Real-time knowledge, coding explanations, Rust + Nix discussions | Rate-limited but usable | Strong on systems programming topics and current ecosystem knowledge. |
+| **Claude free (Sonnet)** | Careful Rust reasoning, ownership/lifetimes, clean architecture | ~30–40 messages / 5 h window | Currently one of the best free models for *correct* Rust (borrow checker, traits, async). |
+| **ChatGPT free + Codex** | Quick coding tasks, agentic work | Limited agent usage | Solid all-rounder, especially with Codex CLI. |
+| **GitHub Copilot Free** | Inline completions in editor | 2 000 completions + 50 chats/month | Good enough for day-to-day Rust/Nix while learning. |
+
+**Practical free combo most power users run:**
+- Gemini or Grok for high-level architecture / Nix design discussions
+- Claude free for deep Rust debugging and lifetime questions
+- Local models (below) for unlimited offline work and privacy
+
+### 2. Best Fully Free / Local Setup (Ollama + llama.cpp)
+This is where you get *unlimited* usage on your NixOS machine.
+
+**Recommended models (Oct 2026 ranking for coding):**
+
+| Hardware | Best Model | Why | Command (Ollama) |
+|----------|------------|-----|------------------|
+| 24 GB+ VRAM / 32 GB+ unified | **Qwen3.6 / Qwen3.8-27B** or **Qwen3-Coder 30B-A3B** | Top practical coding model. Excellent on Rust, strong SWE-bench scores, huge context | `ollama run qwen3.6` or `qwen3-coder:30b` |
+| 16–24 GB | **Devstral Small 2** or **gpt-oss-20b** | Strong agentic coding | `ollama run devstral-small-2` |
+| 8–16 GB | **Qwen2.5-Coder 7B/14B** | Fast and surprisingly good for completions + chat | `ollama run qwen2.5-coder:14b` |
+| Any | Smaller coder models for autocomplete | Speed | `qwen2.5-coder:1.5b` or similar |
+
+**Tooling that works perfectly on NixOS:**
+- **Ollama** (easiest) + **llama.cpp** (maximum performance / fine control)
+- **Cline** or **Continue.dev** (VS Code / Helix / Neovim extensions) → point them at Ollama
+- **Aider** or **OpenCode** (terminal agents) → best for multi-file Rust refactors and git-native workflows
+- **Goose** (Rust-written agent) — especially nice on NixOS
+
+You can package all of this cleanly in a Nix flake or Home Manager so it is reproducible.
+
+### 3. Task-Specific Recommendations
+
+| Task | Best Free Option | Runner-up |
+|------|------------------|-----------|
+| **Advanced Rust** (ownership, async, unsafe, traits, crate design) | Claude free Sonnet + local Qwen3-Coder | Grok / Gemini |
+| **Nix architecture / flakes / modules / systems config** | Gemini (huge context) + Grok | Claude |
+| **Nushell** (still low training data) | Models with web search (Grok, Gemini, Claude) + local RAG over official docs | Any frontier free tier |
+| **Multi-file refactoring / agentic coding** | OpenCode or Aider + free Zen models / OpenRouter free models | Cline + local Qwen |
+| **Inline completions while coding** | Continue.dev or Cline + local Qwen2.5-Coder | GitHub Copilot Free |
+| **Systems engineering / architecture discussions** | Gemini + Grok | Claude |
+| **Completely offline / privacy** | Qwen3.x family via Ollama or llama.cpp | — |
+
+### 4. Recommended Workflow for Maximum Speed to a Rust Job
+
+1. **Daily coding** → Continue.dev / Cline + local Qwen3-Coder (or 27B) for unlimited use.
+2. **Hard Rust problems** → Claude free or Grok when local model struggles.
+3. **Nix system design** → Paste large configs into Gemini (best free long-context reasoning).
+4. **Nushell learning** → Use models with search + keep the official Nushell docs + book open; feed relevant pages into the context.
+5. **Portfolio / job prep** → Build real projects (CLI tools, systems utilities, Nix modules that do something useful). Use agents (Aider/OpenCode) to help you iterate fast, then understand and clean every change yourself.
+6. **Practice** → Deliberately solve Rust exercises, contribute to real crates, write advanced Nix (e.g. custom modules, overlays, flake parts, NixOS tests).
+
+### Quick Start Commands (NixOS-friendly)
+
+```bash
+# Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull qwen3-coder:30b   # or qwen3.6 / whatever fits your VRAM
+
+# Then in VS Code / your editor: install Continue or Cline and point it at http://localhost:11434
+```
+
+For pure terminal power users: install **OpenCode** or **Aider** and use the free models they expose (or point them at Ollama / free OpenRouter routes).
+
+### Bottom Line Ranking for *Your* Goals
+
+1. **Highest quality free cloud**: Gemini + Claude free + Grok (rotate between them)
+2. **Best unlimited local**: Qwen3.x / Qwen3-Coder family via Ollama + Cline/Continue/Aider
+3. **Best overall free agentic experience**: OpenCode (especially with its free Zen models) or Cline
+4. **Best pure Rust reasoning right now (free)**: Claude Sonnet free tier
+
+You already have an unusually strong foundation after only 5–6 months. The combination of a strong local model for daily work + the best free cloud models for hard problems will compound extremely fast. Focus the AI on *explaining why* rather than just generating code — that is what turns you into a systems-level engineer instead of someone who just prompts.
+
+If you tell me your exact hardware (VRAM / RAM) I can give you the precise model + quant recommendation.
