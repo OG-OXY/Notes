@@ -1,0 +1,9 @@
+To see every single valid option your specific binary accepts without guessing, run:
+Code snippet
+
+warpd --list-options
+
+And to see every key name you can bind things to (like space, m, r, etc.):
+Code snippet
+
+warpd --list-keys

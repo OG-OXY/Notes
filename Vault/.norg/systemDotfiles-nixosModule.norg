@@ -1,0 +1,146 @@
+**Dynamic User Mapping via `config.users.users**`
+
+To avoid hardcoding `/home/ty`, iterate over `config.users.users` using `lib.mapAttrsToList`. This extracts the actual home directory path (`user.home`) and username for any user configured on the system, filtering out system users by checking if their shell or home directory matches expected patterns (or explicitly targeting human users).
+
+**Multi-File Attribute Set Pattern**
+
+To handle multiple files across different tool configs, define an option that takes an attribute set where the key is the relative path inside `~/.config/` and the value is the text block or Nix store path.
+
+**Combined Module Implementation**
+
+The following reusable NixOS module pattern implements both approaches. It loops through target users and generates `systemd.tmpfiles.rules` for multiple configuration files automatically:
+
+```nix
+{ config, lib, pkgs, ... }:
+
+let
+  cfg = config.programs.systemDotfiles;
+
+  # Filter for actual human users (e.g. users with a home directory under /home)
+  normalUsers = lib.filterAttrs 
+    (name: user: user.home != null && lib.hasPrefix "/home/" user.home) 
+    config.users.users;
+
+  # Helper to generate tmpfiles lines for a given user and config map
+  mkUserRules = username: user: files:
+    let
+      home = user.home;
+    in
+      lib.flatten (lib.mapAttrsToList (subPath: fileContent: [
+        # Ensure parent directory exists
+        "d ${home}/.config/${lib.dirOf subPath} 0755 ${username} ${user.group} -"
+        # Create symlink or file
+        "L+ ${home}/.config/${subPath} - - - - ${fileContent}"
+      ]) files);
+
+  # Flatten rules across all target users and all files
+  allTmpfilesRules = lib.flatten (
+    lib.mapAttrsToList (username: user: mkUserRules username user cfg.files) normalUsers
+  );
+in
+{
+  options.programs.systemDotfiles = {
+    enable = lib.mkEnableOption "system-level config deployment via tmpfiles";
+
+    files = lib.mkOption {
+      type = lib.types.attrsOf lib.types.path;
+      default = {};
+      description = "Attribute set of ~/.config/ relative paths mapped to store paths/files.";
+      example = lib.literalExpression ''
+        {
+          "warpd/config" = pkgs.writeText "warpd-config" "left: space";
+          "ghostty/config" = pkgs.writeText "ghostty-config" "theme = catppuccin-mocha";
+        }
+      '';
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    systemd.tmpfiles.rules = allTmpfilesRules;
+  };
+}
+
+```
+
+**How to Consume It in Your Flake**
+
+With the generic module in place, you can feed multiple tool configurations into it from anywhere in your dendritic flake without binding to Home Manager:
+
+```nix
+programs.systemDotfiles = {
+  enable = true;
+  files = {
+    "warpd/config" = pkgs.writeText "warpd-config" ''
+      left: space
+      right: r
+      hint_activation_key: A-M-h
+    '';
+    "ghostty/config" = pkgs.writeText "ghostty-config" ''
+      font-size = 14
+      cursor-style = block
+    '';
+  };
+};
+
+```
+Pairing **warpd** with **Niri's** infinite scrollable-tiling layout creates an incredible keyboard-driven workflow. Since Niri uses KDL for its configuration (`~/.config/niri/config.kdl`), it drops right into your new Home Manager-free `systemDotfiles` NixOS module without any friction.
+
+**Niri Integration & Custom Bindings**
+You can declare your entire `config.kdl` inside your NixOS module and map keybindings to trigger `warpd` modes directly alongside Niri's window navigation rules:
+
+```nix
+programs.systemDotfiles.files."niri/config.kdl" = pkgs.writeText "niri-config" ''
+  // Spawn warpd modes directly from Niri keybindings
+  binds {
+    "Mod+Alt+H" { spawn "warpd" "--hint"; }
+    "Mod+Alt+G" { spawn "warpd" "--grid"; }
+  }
+
+  // Scrollable layout & column sizing
+  layout {
+    default-column-width { proportion 0.5; }
+    focus-ring { off; }
+    border {
+      width 2
+      active-color "#89b4fa"
+      inactive-color "#313244"
+    }
+  }
+'';
+
+```
+
+**Declarative Vimium C Configuration**
+Browser extensions can be awkward to configure declaratively, but **Vimium C** handles raw JSON options better than almost any other extension. You have two options to keep it declarative:
+
+* **Managed Browser Policies (Pure NixOS)**: You can push extension settings directly using enterprise policies (`programs.chromium.extraOpts` or `/etc/firefox/policies/policies.json`). This lets you force-install Vimium C system-wide on browser launch.
+* **Nix-Managed Backup File**: Keep your Vimium C custom keybindings and excluded URLs inside a `vimium-options.json` file managed by your `systemDotfiles` module. When setting up a clean machine, you simply click **Restore Settings** in Vimium C and point it to `~/.config/vimiumc/options.json`.
+
+  Which aspect of your Niri layout or window movement bindings are you looking to refine first?
+
+To view all default keybindings and configure Vimium C declaratively, you don't even have to leave your browser.
+
+### 1. View Every Built-In Bind
+
+Open any webpage in your browser (Zen or Firefox) and press **`?`** (Shift + `/`). This opens Vimium C's **Help Dialog overlay**, which displays an exhaustive, live-updated list of every active single-key and multi-key command currently registered.
+
+### 2. Configure Vimium C Declaratively via JSON
+
+Vimium C allows you to export and import your exact keybindings, custom search engines, and excluded URLs as a JSON text block. You can manage this file directly through your new Home Manager-free `systemDotfiles` module.
+
+1. Go to Vimium C's options page (`chrome-extension://.../options.html` or via its extension popup).
+2. Scroll to the bottom to the **Backup** section.
+3. Export your current settings to get your raw JSON structure.
+4. Save that JSON block into your Nix repository (e.g., as `vimium-config.json`) and drop it into `~/.config/vimiumc/options.json` using your system activation rules:
+
+```nix
+programs.systemDotfiles.files."vimiumc/options.json" = pkgs.writeText "vimium-options" ''
+  {
+    "keyMappings": "map j scrollDown\nmap k scrollUp\nmap h scrollLeft\nmap l scrollRight",
+    "linkHintCharacters": "astgmneio"
+  }
+'';
+
+```
+
+When setting up a clean profile, you simply click **Import Settings** in Vimium C and point it right to that declarative JSON file.

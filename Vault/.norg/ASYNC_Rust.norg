@@ -1,0 +1,67 @@
+**Async Rust** is a programming paradigm that allows Rust applications to execute concurrent tasks on a single thread (or a small thread pool) without the overhead of heavy OS-level threads.
+
+Instead of blocking an entire OS thread while waiting for an operation to finish (like reading a file from disk, querying a database, or waiting for a network packet), async Rust yields control of the execution thread back to the runtime so it can process other work until the pending operation completes.
+
+---
+
+### The Core Concepts
+
+Async Rust is built around a few foundational primitives provided by the language, standard library, and ecosystem:
+
+#### 1. Futures
+
+A `Future` is a trait representing a value that may not be available yet, but will be computed eventually.
+Unlike promises/futures in JavaScript or Python, **Rust futures are lazy**. They do nothing unless they are explicitly polled.
+
+#### 2. `async` / `.await` Syntax
+
+* **`async`**: Decorates functions or code blocks to turn their return value into a state machine that implements `Future`.
+* **`.await`**: Suspends execution of the current `async` block until the underlying `Future` finishes running, allowing other tasks to run on the thread in the meantime.
+
+```rust
+// Regular synchronous function (blocks thread)
+fn fetch_data_sync() -> String {
+    std::thread::sleep(std::time::Duration::from_secs(1)); // Thread freezes
+    "data".to_string()
+}
+
+// Async function (non-blocking)
+async fn fetch_data_async() -> String {
+    tokio::time::sleep(std::time::Duration::from_secs(1)).await; // Thread yields
+    "data".to_string()
+}
+
+```
+
+#### 3. Runtimes
+
+The Rust language and standard library **do not include an async runtime**. They only provide the core primitives (`async`, `.await`, `std::future::Future`, `Waker`, `Context`).
+
+To actually run async code, you must include an external asynchronous runtime in your dependencies. Runtimes manage task scheduling, I/O event loops (epoll/kqueue/io_uring), and timer mechanisms:
+
+* **Tokio**: The de facto industry standard for web servers, CLI tools, and general networking.
+* **async-std**: A runtime mimicking the standard library's API design.
+* **Smol**: A lightweight, minimalist async runtime.
+* **Embassy**: Designed specifically for bare-metal embedded systems.
+
+---
+
+### Why Use Async Rust?
+
+| OS Threads (Preemptive) | Async Rust (Cooperative) |
+| --- | --- |
+| OS schedules context switches automatically | Tasks yield control explicitly via `.await` |
+| High memory footprint (~1-8 MB stack per thread) | Very low memory footprint (futures compile down to compact enum state machines) |
+| Best for CPU-bound tasks (e.g., ray tracing, video encoding) | Best for I/O-bound tasks (e.g., web servers, microservices, game network loops) |
+| Thread limits usually capped in low thousands | Scales to tens of thousands/millions of concurrent connections |
+
+---
+
+### Key Things to Watch Out For
+
+1. **Don't Block the Async Executor:**
+Calling blocking I/O (like `std::fs::read` or `std::thread::sleep`) inside an async function freezes the underlying runtime worker thread, starving all other tasks queued on that thread. Always use async equivalents (`tokio::fs`, `tokio::time::sleep`) or offload blocking operations using `tokio::task::spawn_blocking`.
+2. **Pinning and Wakers:**
+Under the hood, when an async function is compiled, Rust transforms it into a self-referential state machine struct. Because pointers inside self-referential structs can become invalid if moved in memory, Rust uses `Pin` to guarantee the memory address of a `Future` remains static while active.
+3. **Async Traits:**
+Native support for `async fn` inside traits was stabilized in Rust 1.75+. Prior to that, crates relied on the `#[async_trait]` macro.
