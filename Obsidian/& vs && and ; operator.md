@@ -11,7 +11,7 @@ If you absolutely do not want the computer to power off if the Nix build fails, 
 
 Here is the exact command updated with `&&` for Fish:
 
-```fish
+```shell
 sudo nohup fish -c "nh os switch --update && systemctl poweroff" &
 ```
 
