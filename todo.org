@@ -1,7 +1,0 @@
-#+TITLE:My todo items
-#+SEQ_TODO: todo | done
-
-* 1 todo buy lamp
-
-
-* 2 todo Lean LAMP stack

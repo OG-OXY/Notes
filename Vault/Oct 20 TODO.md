@@ -5,7 +5,7 @@
 - Can NoteTaking Be Done In Helix?
   [[Editor, Notes, Ghostty + Herdr Workflow plan]]
 
-- Grab Steel Helix [[Helix Master and Steel]]  DONE
+- Grab Steel Helix [[Helix Master and Steel]]  Didnt Work?
 - Add Upward Line Selection (X) And Integrate Yazi To Helix [[Helix X]]
 - Configure Doom Emacs Under System Or Stick WIth Home Module? [[Doom Emacs Configured With System]] 
 

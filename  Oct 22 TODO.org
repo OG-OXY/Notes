@@ -1,0 +1,213 @@
+#+TITLE:  Oct 22
+Thu Oct 22 22:55:52 2026
+* TODO Main Priorities
+** TODO Migrate Away From HM
+- Figure Out How HM Work Under Hood
+  - Read Its Systemd User Services
+  - Read How It Links .config's
+  - Learn How To Replace That With Etc
+    - Replicate HM's Effect
+- Find A Way To Make ETC Work
+  - Look At Programs Direct Documentation
+    - Figure out how their configs and override priority work
+      - Replicate Through ETC
+** TODO Figure Out How Stash Tabs Work
+ - This Will Stop Zen From Taking SOO Much Space Up
+* Integrate Yazi With Emacs?
+** You can integrate the Yazi terminal file manager into Emacs using dedicated Emacs packages that launch Yazi asynchronously and pass back selected files. [1] (https://www.reddit.com/r/emacs/comments/1pv3vqe/any_one_want_try_yazi_in_emacs/), [2] (https://github.com/eval-exec/eee.el)
+
+1. Using eee.el (Recommended for Asynchronous TUI Integration)
+eee.el launches external TUI apps (like Yazi, Lazygit, and Ripgrep) asynchronously without blocking Emacs, and automatically returns callbacks to open selected files. [1] (https://github.com/eval-exec/eee.el)
+
+- Installation (with use-package via Straight):elisp
+  
+(use-package eee
+  :ensure '( :type git
+             :host github
+             :repo "eval-exec/eee.el"
+             :files (:defaults "*.el" "*.sh")))
+             
+- Configuration Example:elisp
+  
+(use-package eee
+  :load-path "~/Projects/github.com/eval-exec/eee.el/"
+  :bind-keymap ("s-e" . ee-keymap)
+  :config
+  (setq ee-terminal-command "wezterm") ; or alacritty, kitty, etc.
+  (global-set-key (kbd "C-x C-f") 'ee-yazi))
+
+2. Using yazi.el (Dedicated term.el Integration)
+ yazi.el provides a direct wrapper to run Yazi inside an Emacs buffer via term.el. [1] (https://github.com/bommbo/yazi.el), [2] (https://www.reddit.com/r/emacs/comments/1pv3vqe/any_one_want_try_yazi_in_emacs/)
+
+- Installation:
+Add the repository to your load-path and require the package:elisp
+
+(add-to-list 'load-path "/path/to/yazi.el")
+(require 'yazi)
+
+- Meow Mode Compatibility (Optional):
+If you use meow for modal editing, disable it inside the terminal hook:elisp
+
+(add-hook 'term-mode-hook
+          (lambda ()
+            (meow-mode -1)
+            (setq-local meow-normal-mode nil)))
+
+If you'd like, let me know:
+- Which Emacs package manager you use (Straight, Elpaca, Doom Emacs, etc.)
+- Which terminal emulator you prefer inside or outside Emacs (Wezterm, Kitty, Alacritty, or term.el)
+
+* Using Dired Instead Of Yazi Intregration?
+** You can replicate your lightning-fast Helix + Yazi file creation and navigation workflow inside Doom Emacs by leveraging its built-in fuzzy finders and a directory-editor called Dired. You do not need to type out full paths or get stuck deep in a folder structure.
+Because you are using Doom Emacs, the core optimization packages are already built-in and heavily configured—you just have to turn them on and learn the fast keybindings.
+
+1. Instant Navigation & Fuzzy Finding (Your Helix space f)
+
+Doom uses Vertico and Consult for fuzzy finding. You never need to type a full path.
+- SPC . (Find File): This opens a fuzzy finder. You don't type a path; you just start typing any part of the filename or folder name. It behaves exactly like Helix's picker.
+- SPC f f (Find File in Project): This is your exact Helix space f. It bounds the fuzzy search strictly to your Git repository or project root, completely ignoring how deep you are.
+- SPC s p (Search Project / Ripgrep): Instantly greps across your entire notes or system project folder.
+
+2. Fast File & Directory Creation (Your Yazi a mapping)
+
+Instead of jumping out to Yazi, you can use Dired (the built-in file manager) which behaves exactly like a text buffer.
+1. Press SPC d d or SPC - to open the file manager in your current directory.
+2. To create a file or directory: Press + to create a directory, or just use SPC . and type a new filename at the end of the path to create a brand new file instantly.
+3. To jump back up a directory: Press ^ (Shift + 6) or - to immediately go up one folder tier. You will never get stuck deep in a directory stack.
+
+3. The Ultimate Note-Taking Setup (Org-Roam)
+
+Since your goal is a hyper-powerful note-taking application, you should enable Org-Roam. It is a slip-box (Zettelkasten) method built into Doom that completely bypasses managing directories and files manually.
+- SPC n r f: Finds or creates a note instantly by title/tag via fuzzy search. If the note doesn't exist, it creates it instantly in your notes directory.
+- SPC n r i: Inserts a lightning-fast link to another note.
+
+How to turn these on in doom-emacs-unstraightened
+
+To make sure you have the fast completion engine and the note-taking layers enabled, verify that your init.el block in your system configuration contains these modules un-commented:
+elisp
+
+;; In your Doom init.el structure:
+(doom! :completion
+       vertico           ; Fuzzy matching/filtering layout (replaces standard minubuffer)
+       :tools
+       direnv            ; Integrates your dev environments automatically
+       :lang
+       org               ; +roam flag enables the database-backed note system
+       (org +roam2))
+
+If you want to configure this directly into your Nix module, let me know:
+- Where your notes directory lives on your system.
+- Whether you prefer Emacs default keybindings or Evil (Vim-style) modal bindings inside Doom.
+I can provide the clean Nix code block to wire it up!
+
+** Fixing Dired Not Loading On Startup
+*** This error means that Doom Emacs is trying to call a function (dired-read-dir-and-switches) before the core Dired file manager code has actually been loaded into memory. Because you are using doom-emacs-unstraightened on NixOS, package initialization and autoload variables can sometimes load out of sequence, especially with custom or system-wide configurations. [1] (https://gitlab.com/Walheimat/emacs-config)
+
+You can fix this instantly by forcing Emacs to explicitly load dired before anyone tries to call its functions.
+
+How to Fix It
+
+Add this line to your config.el file:
+elisp
+(require 'dired)
+
+Alternatively, if you want it to lazy-load cleanly right before Dired initialization hooks kick in:
+elisp
+(with-eval-after-load 'dired
+  (require 'dired))
+  
+Save the file, restart your Emacs instance or reload your config, and your keybindings (SPC - or SPC d d) will work perfectly without throwing that void function error!
+
+**** What is the difference between the two fixes?
+The key difference between the two snippets comes down to startup speed vs. safety, and the reason you ran into this is due to how Emacs manages its memory.
+
+- Why this happens (The "Why")
+  
+  - Unlike Neovim, where a massive plugin tree might only take 50ms to read from disk, Emacs is fundamentally a massive runtime environment that contains decades of built-in packages (like Dired, Org-mode, Calc, etc.). If Emacs loaded all of its built-in code instantly at startup, it would take seconds to open a terminal buffer.
+    
+  - To solve this, Emacs uses Autoloads. It creates placeholders: "I know the command dired exists, but I won't load the actual 5,000 lines of Dired code until the user explicitly runs it."
+    
+  - When you typed SPC : dired, you hit that explicit placeholder, and Emacs loaded the file manager cleanly. When you used the keybinding (SPC -), Doom executed a wrapper function that expected a secondary internal function (dired-read-dir-and-switches) to be ready. Because the placeholder hadn't been triggered yet, Emacs didn't know that secondary function existed, throwing the void function error.
+
+Since you prefer to straight-up require everything like you did in Neovim, you should use the first method. Here is exactly how they differ:
+
+Option 1. (require 'dired) (Recommended for you)
+
+- What it does: It completely disables lazy-loading for Dired. It forces Emacs to read, evaluate, and load the entire Dired file manager into RAM the absolute millisecond Emacs boots up.
+  - Pros: Bulletproof. It mimics your Neovim style. The functions will always be available instantly, and you will never see that void-function error again.
+  - Cons: It adds a few milliseconds to your startup time (unnoticeable on a modern system with an NVMe SSD).
+
+Option 2. (with-eval-after-load 'dired ...)
+
+- What it does: This is a safety macro for strict lazy-loading ecosystems. It tells : "Do absolutely nothing right now. But if the user ever triggers Dired in the future, wait until the main file finishes loading, and then immediately execute this extra line."
+  
+- Why it's redundant here: In this specific context, using (with-eval-after-load 'dired (require 'dired)) is actually a bit circular and redundant—it was a slight oversight in my previous breakdown. If Dired has already loaded, requiring it inside its own post-load hook doesn't change the initial binding failure.
+
+The Verdict
+
+Stick to your Neovim philosophy here. Open your config.el and add the blunt force fix to ensure it is always ready to fly:
+elisp
+(require 'dired)
+
+Let me know if adding (require 'dired) fixes the SPC - binding right at launch, or if we need to check how Doom's completion engine is mapping your project navigation!
+
+***** Where To Put The Fix
+You should put configurations, custom package settings, and force-loads like require inside config.el, not init.el.
+- init.el is strictly for telling Doom what modules to download and initialize via the (doom!) block.
+- config.el is where you customize how those modules behave once they are turned on, including loading tweaks.
+Open your config.el and simply paste (require 'dired) right at the bottom:
+elisp
+;; doom.d/config.el -*- lexical-binding: t; -*-
+(use-package! org-roam
+  :custom
+  (org-directory "~/Notes")
+  (org-roam-directory "~/Notes")
+  :config
+  (org-roam-db-autosync-mode))
+
+;; Force load Dired instantly at startup to fix the NixOS/Unstraightened binding error
+(require 'dired)
+
+** A Faster Alternative for a Note-Taking Setup
+Since your absolute main goal is to use Doom as a super powerful, lightning-fast note-taking app where you can navigate instantly, you can actually use consult-notes or built-in Org-Roam commands to completely bypass Dired altogether.
+
+- Instead of managing directories manually, you can add a keybinding to search your entire ~/Notes folder instantly. Add this to your config.el:
+elisp
+(map! :leader
+      :desc "Fuzzy find my notes"
+      "n f" #'(lambda () (interactive) (consult-find "~/Notes")))
+      
+Now, striking SPC n f will instantly open a live, recursive fuzzy finder over your entire notes directory, mimicking your exact Helix workflow.
+
+* What Is Org Roam?
+Org-Roam is a tool that turns Emacs into a non-linear, database-backed personal knowledge graph. It replicates the Zettelkasten (slip-box) note-taking method, which is the exact same philosophy behind modern markdown apps like Obsidian or Logseq.
+Instead of organizing your thoughts by nesting files inside deep, messy directory structures, Org-Roam lets you organize your thoughts by connecting concepts together through links.
+
+** The Core Features
+1. Bypassing File & Directory Management Completely
+
+You never have to think about what folder a note should live in or what to name the physical file.
+- You hit a single shortcut (SPC n r f), type a title or concept (e.g., NixOS Flakes or Rust Memory Management), and hit Enter.
+- Org-Roam instantly creates a flat, standardized file in your ~/Notes directory behind the scenes with a unique ID. You are immediately dumped into the file to start writing.
+
+2. Networked Thought (Bi-directional Linking)
+
+In a traditional folder setup, if you have a note about Rust and a note about Linux Systems, they live in separate folders.
+- With Org-Roam, you can type [[roam:Rust]] inside your Linux note.
+- This creates a link to the Rust note, but it also automatically updates the Rust note with a backlink. When you open your Rust note, it will show a dedicated sidebar listing every single note on your system that has ever mentioned or linked to "Rust."
+
+3. Lightning-Fast Local Database Tracking
+
+Org-Roam runs a local SQLite database in the background that parses and caches your entire ~/Notes folder.
+- Because it is a database, fuzzy searching through thousands of deep links, tags, and titles happens instantly. It scales seamlessly whether you have 10 notes or 10,000 notes.
+
+How to use it in your daily workflow
+
+Since you want a lightning-fast configuration, here are the only three keybindings you need to memorize in Doom Emacs:
+- SPC n r f (Find/Create Note): Search for an existing note by title or tag. If it doesn't match anything, it creates a new note with that title instantly.
+- SPC n r i (Insert Link): While typing a note, hit this to instantly search your database and drop a link to another note.
+- SPC n r r (Toggle Backlinks): Opens a clean side buffer showing you every other note that connects back to the current note you are looking at.
+It effectively removes the friction of "traveling somewhere without typing a full path" because your entire knowledge base is flat, indexed, and instantly accessible via an interactive fuzzy picker.
+Would you like a clean NixOS-compatible code block to ensure the SQLite database dependency for Org-Roam installs automatically on your system?
+
+* 

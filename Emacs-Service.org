@@ -1,15 +1,17 @@
+#+title: Emacs-Service
 * TODO  Declare Emacs System-Wide + systemd.user.service.emacs Fix
-  * How To Make Emacs Daemon Work
-  [Install]
-  WantedBy=default.target
+** How To Make Emacs Daemon Work
 
-  [Service]
-  ExecStart=/nix/store/10dxp0qxqxxsyiljrh2kp0xqhz6arhcx-bash-5.3p15/bin/bash -l -c "/nix/store/il5s87pn42vixs7xiixwxnl38nf43h93-emacs-pgtk-with-doom-31.1/bin/emacs --fg-daemon "
-  Restart=on-failure
-  SuccessExitStatus=15
-  Type=notify
+[Install]
+WantedBy=default.target
 
-  [Unit]
-  Description=Emacs text editor
-  Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
-  X-RestartIfChanged=false
+[Service]
+ExecStart=/nix/store/10dxp0qxqxxsyiljrh2kp0xqhz6arhcx-bash-5.3p15/bin/bash -l -c "/nix/store/il5s87pn42vixs7xiixwxnl38nf43h93-emacs-pgtk-with-doom-31.1/bin/emacs --fg-daemon "
+Restart=on-failure
+SuccessExitStatus=15
+Type=notify
+
+[Unit]
+Description=Emacs text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+X-RestartIfChanged=false

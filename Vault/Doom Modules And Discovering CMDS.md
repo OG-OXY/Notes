@@ -1,0 +1,44 @@
+While the idea of having everything on by default sounds convenient for exploring, **Doom Emacs doesn't natively support a "disable-list" (blacklist) mode**, and there are a few important technical reasons why you wouldn't want to do it that way even if it were possible:
+
+---
+
+### Why "Disable by Default" Doesn't Work Well in Emacs
+
+1. **Massive Performance Degradation**
+Emacs would attempt to initialize, compile, and hook thousands of packages and external tools on startup. It would turn a ~1-second startup into a long, sluggish delay, and background processes would make editing feel slow.
+2. **Missing System Dependencies**
+Many Doom modules rely on tools installed on your Linux system (like `ripgrep`, `fd`, `git`, `LSP servers`, compiler toolchains, `pandoc`, etc.). Enabling every module by default would flood your screen with missing tool warnings or broken features.
+3. **Keybinding and Keymap Clashes**
+With every module active simultaneously, keybindings across different languages, modes, and tools would constantly collide or overwrite each other.
+
+---
+
+### The Better Solution: How to Discover What Doom Offers
+
+Instead of turning everything on, you can use built-in tools to **explore all available modules and features easily** right inside Doom:
+
+#### 1. Open the Master `init.el` Template
+
+Doom comes with a fully documented `init.el` template listing **every single available module** organized by category, complete with comments explaining what they do.
+
+* Press `SPC f f` (find file).
+* Navigate to `~/.config/emacs/init.example.el` (or look inside Doom's install directory).
+* Alternatively, run `M-x doom/help-modules` inside Emacs to view the official interactive module documentation.
+
+#### 2. Interactive Discovery Commands in Emacs
+
+Emacs excels at self-documentation. If you don't know what a command, package, or keybinding does, you can inspect it on the fly:
+
+| Action | Keybinding / Command | Description |
+| --- | --- | --- |
+| **Search Commands** | `M-x` | Type anything to search available commands via Vertico. |
+| **Describe Key** | `SPC h k` (or `C-h k`) | Press any key combination to see what function it runs. |
+| **Describe Function** | `SPC h f` (or `C-h f`) | Look up documentation for any Emacs Lisp function. |
+| **Describe Variable** | `SPC h v` (or `C-h v`) | Look up options, settings, and flags. |
+| **Doom Documentation** | `SPC h d h` | Opens the interactive Doom Emacs manual. |
+
+#### 3. Recommended Minimal Approach
+
+Instead of enabling everything, start with a core setup (like `:completion vertico`, `:ui doom`, `:editor evt`, `:lang (org +roam)`), and whenever you want to work with a specific language or feature (like Rust, Lua, or Nix), just open your `~/.config/doom/init.el`, uncomment that single line, and run `doom sync` in your terminal.
+
+---

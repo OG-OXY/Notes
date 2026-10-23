@@ -1,0 +1,5 @@
+#+title: Scratch Pad
+* TODO
+- Helix Binds *look at options for making them more efficient*
+- 
+

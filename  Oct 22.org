@@ -1,0 +1,15 @@
+#+TITLE:  Oct 22
+* TODO List
+Thu Oct 22 22:32:35 2026
+** TODO Migrate Away From HM
+- Figure Out How HM Work Under Hood
+  - Read Its Systemd User Services
+  - Read How It Links .config's
+  - Learn How To Replace That With Etc
+    - Replicate HM's Effect
+- Find A Way To Make ETC Work
+  - Look At Programs Direct Documentation
+    - Figure out how their configs and override priority work
+      - Replicate Through ETC
+** TODO Figure Out How Stash Tabs Work
+ - This Will Stop Zen From Taking SOO Much Space Up
