@@ -1,4 +1,4 @@
-#+TITLE:  Oct 22
+#+TITLE: Oct 22
 Thu Oct 22 22:55:52 2026
 * TODO Main Priorities
 ** TODO Migrate Away From HM
