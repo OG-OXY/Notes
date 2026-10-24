@@ -1,0 +1,71 @@
+That instinct is 100% valid. Org-mode is legendary for agenda and task
+tracking, but forcing yourself through complex Emacs keybindings just to
+manage plain text notes---when Helix and Yazi already fit your hands
+like a glove---creates unnecessary friction.
+
+If Helix + Obsidian feels faster, you don't need to force yourself into
+Doom Emacs for your Zettelkasten. You can make Obsidian feel almost
+identical to Helix's modal workflow and search ergonomics with two quick
+plugins.
+
+| ​## 1. Get Helix/Vim Motions in Obsidian Obsidian has built-in Vim mode, but the community plugin *Vimrc Support* lets you remap keys to match Helix's modal habits: 1. Enable *Vim Mode* in =Settings -> Editor -> Vim key bindings=. 2. Install the *Vimrc Support* plugin from Obsidian's Community Plugins. 3. In your Obsidian vault root, create an =.obsidian.vimrc= file. |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ​## 2. Fast File Searching (Helix =Space f= Style) To recreate Helix's quick file finder (=space f=) inside Obsidian:                                                                                                                                                                                                                                                             |
+| 1. Enable the built-in *Quick Switcher* core plugin (or install *Omnisearch* for fuzzy-searching content inside files). 2. Go to =Settings -> Hotkeys=. 3. Search for *Quick switcher: Open quick switcher*. 4. Clear =Ctrl+O= and bind it to *=Ctrl+P=* or set a Vim binding in your =.obsidian.vimrc=:                                                                         |
+| =vim " Trigger Quick Switcher with SPC f exmap quickSwitcher obcommand switcher:open nmap <Leader>f :quickSwitcher= Now you can hit *=Space f=*, type a few letters of your note, hit *=Enter=*, and instantly open it without touching your mouse or leaving normal mode.                                                                                                       |
+
+** 3. Keyboard Scrolling in Obsidian
+:PROPERTIES:
+:CUSTOM_ID: keyboard-scrolling-in-obsidian
+:END:
+#+begin_example
+  Inside your `.obsidian.vimrc`, you can also map smooth scrolling to `j` and `k` variants so you never have to break your home-row posture:
+#+end_example
+
+#+begin_src vim
+" Scroll view down/up with Ctrl+d and Ctrl+u
+nmap <C-d> <C-d>
+nmap <C-u> <C-u>
+#+end_src
+
+--------------
+
+Would you like to keep =~/Notes/Obsidian= as your main Markdown vault
+for Helix/Obsidian and set up a lightweight terminal CLI (like
+=org-planner= or a Fish alias) for TODOs so you don't need Emacs at all?
+
+In Vim modal mode (which Obsidian's engine uses), there is *no default
+=<Leader>= key* assigned until you explicitly define one!
+
+By default, Vim only knows standard modal keys (like =i= for insert,
+=hjkl= for movement, =:= for commands). To make =Space= act as your
+Leader key, you have to unmap standard =Space= first and tell Vim to
+treat =Space= as =<Leader>=.
+
+Here is the exact setup to put in your =.obsidian.vimrc= file inside
+your vault root (=~/Notes/Obsidian/.obsidian.vimrc=):
+
+| ​### =.obsidian.vimrc= Config                                                                                                       |
+| ```vim ” 1. Unmap default Space behavior and set Space as Leader unmap let mapleader=” ”                                           |
+| ” 2. Example: Space + w to Save exmap save obcommand workspace:save-buffer nmap w :save                                            |
+| ” 3. Example: Space + f to open Quick Switcher (Helix style) exmap quickSwitcher obcommand switcher:open nmap f :quickSwitcher ``` |
+
+*** Why You Need =exmap= in Obsidian
+:PROPERTIES:
+:CUSTOM_ID: why-you-need-exmap-in-obsidian
+:END:
+Unlike standard Neovim/Vim, Obsidian's internal commands (like opening
+the Quick Switcher or saving) aren't native Vim functions. The *Vimrc
+Support* plugin uses =exmap= to bridge Obsidian actions to Vim
+keybindings:
+
+1. =exmap customName obcommand <obsidian-command-id>=
+2. =nmap <Leader>f :customName=
+
+| ​### How to Find Any Obsidian Command ID                                                                                                                                                                                       |
+| If you want to bind other Helix habits (like toggling file tree, splits, or global search):                                                                                                                                   |
+| 1. Open Obsidian *Settings -> Vimrc Support*. 2. Look at the command inspector or run =M-x= / =Ctrl+P= in Obsidian to see command names. 3. Use =exmap <alias> obcommand <id>= in your =.obsidian.vimrc= and reload Obsidian! |
+
+Would you like the =exmap= lines to map Helix's split shortcuts
+(=Space v= and =Space s=) and global search (=Space s= / =Space /=) into
+your =.obsidian.vimrc=?

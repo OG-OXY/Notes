@@ -23,4 +23,4 @@ Once you map that, `x` expands your selection downwards line-by-line, and capita
 
 [Learn more about navigating the codebase with [Helix editor tutorial](https://www.youtube.com/watch?v=vvhIIMd_vW4) to speed up your workflow further.]
 
-[[Oct 20 TODO]]
+[[TODO Oct 20]]

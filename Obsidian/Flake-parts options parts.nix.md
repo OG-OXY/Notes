@@ -1,6 +1,5 @@
 Here is the fully formatted Obsidian note. The Nix code is now properly indented inside a single block, ASCII header dividers have been converted into clean internal code comments, and the surrounding text uses standard Obsidian callouts and bold headers for scanning.
 
-```markdown
 # Flake-Parts Options (`parts.nix`)
 
 In `flake-parts`, top-level configuration options live within the context of `mkFlake` (or any `flake-parts` module). They broadly break down into three core categories:

@@ -110,4 +110,4 @@ If you end up loving Kakoune's selection-first model when you test-drive it, the
 
 That means you don't even have to compromise: you can literally run Kakoune's selection model inside Doom Emacs to edit your Org-mode notes.
 
-[[Oct 20 TODO]]
+[[TODO Oct 20]]

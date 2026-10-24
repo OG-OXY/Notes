@@ -1,4 +1,4 @@
-#+title: Nixosreinstall
+#+title: Nix Os
 * Nix Clean Install Procedure.
 Ah, that makes perfect sense! If you are running the nixos-install purely from your clean, declarative repository state onto the extra drive, that extra drive becomes 100% pristine.
 Since the installation on that extra drive is perfectly clean, cloning that specific drive back to your wiped main SSD via dd will work seamlessly and leave you with a completely flawless system.
@@ -14,13 +14,15 @@ sudo nixos-install --flake .#nixos --root /mnt
 
 The Fast Re-Cloning Phase
 
-* Once you boot into that clean extra drive, you can wipe your main SSD and drop the pristine image right back onto it using a fast, block-level clone:
+** Once you boot into that clean extra drive, you can wipe your main SSD and drop the pristine image right back onto it using a fast, block-level clone:
 
 1. Verify your drive letters using lsblk so you don't overwrite the wrong disk.
 
 2. Clone the pristine system back to your main SSD:fish
 
+#+BEGIN_SRC shell
 sudo dd if=/dev/sdX of=/dev/sdY bs=4M status=progress conv=fsync
+#+END_SRC
 
 (Where sdX is your extra drive and sdY is your primary SSD).
 This completely bypasses the need for an installer USB while ensuring your final primary system state has absolutely zero historical baggage.

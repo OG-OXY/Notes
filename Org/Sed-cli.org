@@ -1,0 +1,57 @@
+To delete a line using =sed=, ==use the =d= command combined with the
+specific line number or text pattern you want to target==.
+
+** 1. Delete by Line Number
+:PROPERTIES:
+:CUSTOM_ID: delete-by-line-number
+:END:
+To delete an exact line number, use the number followed immediately by
+=d=.
+
+- Delete a single line (e.g., line 5):
+
+  #+begin_src sh
+  sed -i '5d' filename.nix
+  #+end_src
+
+- Delete a range of lines (e.g., lines 104 to 114) [Query-relevant
+  Context]:
+
+  #+begin_src sh
+  sed -i '104,114d' filename.nix
+  #+end_src
+
+- Delete the very last line of a file:
+
+  #+begin_src sh
+  sed -i '$d' filename.nix
+  #+end_src
+
+** 2. Delete by Matching Text
+:PROPERTIES:
+:CUSTOM_ID: delete-by-matching-text
+:END:
+If you do not know the line number, you can delete any line that
+contains a specific phrase by wrapping the text in forward slashes
+=/text/=.
+
+- Delete lines containing a word (e.g., delete any line containing
+  =openssh=):
+
+  #+begin_src sh
+  sed -i '/openssh/d' filename.nix
+  #+end_src
+
+- Delete commented lines (lines starting with =#=):
+
+  #+begin_src sh
+  sed -i '/^#/d' filename.nix
+  #+end_src
+
+** What the Flags Mean
+:PROPERTIES:
+:CUSTOM_ID: what-the-flags-mean
+:END:
+- =-i=: Tells =sed= to edit the file in-place (saving the changes
+  directly to the file instead of just printing the output to your
+  screen). [[Markdown syntax]]

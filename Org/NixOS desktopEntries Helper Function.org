@@ -1,0 +1,103 @@
+* Custom Desktop Entry Helper Function Module
+:PROPERTIES:
+:CUSTOM_ID: custom-desktop-entry-helper-function-module
+:END:
+hook that up cleanly using lib.mkIf so it only activates when
+xdg.desktopEntries actually has entries defined, you wrap the config
+block in a conditional check.
+
+lib.mkIf takes a boolean condition as its first argument and an
+attribute set of configurations as its second. If the condition
+evaluates to true, it applies the configuration; if empty or false, it
+completely ignores it without throwing errors.
+
+#+begin_src nix
+{
+  ...
+}:
+{
+  flake.nixosModules.desktopEntries = { pkgs, lib, config, ... }:
+  let
+    cfg = config.xdg;
+
+    desktopItems = lib.mapAttrsToList (name: entry:
+      pkgs.makeDesktopItem {
+        inherit name;
+        desktopName = entry.name or "";
+        genericName = entry.genericName or null;
+        comment = entry.comment or null;
+        exec = entry.exec;
+        icon = entry.icon or "applications-other";
+        terminal = if builtins.isString entry.terminal then entry.terminal == "true" else (entry.terminal or false);
+        type = entry.type or "Application";
+        noDisplay = if builtins.isString entry.noDisplay then entry.noDisplay == "true" else (entry.noDisplay or false);
+        
+        categories = entry.categories or [];
+        
+        mimeTypes = if builtins.isList (entry.mimeType or []) 
+          then entry.mimeType 
+          else if entry.mimeType != null then [ entry.mimeType ] 
+          else [];
+
+        keywords = if (entry.settings.Keywords or "") != "" 
+          then lib.splitString ";" entry.settings.Keywords 
+          else [];
+
+        startupWMClass = entry.settings.StartupWMClass or null;
+
+        actions = lib.mapAttrs (actionName: actionAttrs: {
+          # Explicitly check if it's null or missing, otherwise fallback to the actionName string
+          name = if (actionAttrs.name or null) != null then actionAttrs.name else actionName;
+          exec = actionAttrs.exec;
+          icon = actionAttrs.icon or null;
+        }) (entry.actions or {});
+      }
+    ) (cfg.desktopEntries or {});
+  in
+  {
+    # 1. Option schema remains globally available whenever this module is imported
+    options.xdg.desktopEntries = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.submodule {
+        options = {
+          name = lib.mkOption { type = lib.types.str; };
+          genericName = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+          comment = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+          exec = lib.mkOption { type = lib.types.str; };
+          icon = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+          terminal = lib.mkOption { type = lib.types.anything; default = false; };
+          type = lib.mkOption { type = lib.types.str; default = "Application"; };
+          noDisplay = lib.mkOption { type = lib.types.anything; default = false; };
+          categories = lib.mkOption { type = lib.types.listOf lib.types.str; default = []; };
+          mimeType = lib.mkOption { type = lib.types.anything; default = []; };
+          settings = lib.mkOption {
+            type = lib.types.submodule {
+              options = {
+                Keywords = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+                StartupWMClass = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+              };
+            };
+            default = {};
+          };
+          actions = lib.mkOption {
+            type = lib.types.attrsOf (lib.types.submodule {
+              options = {
+                name = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+                exec = lib.mkOption { type = lib.types.str; };
+                icon = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+              };
+            });
+            default = {};
+          };
+        };
+      });
+      default = {};
+      description = "Global standalone desktop entries emulation module.";
+    };
+
+    # 2. Only inject into systemPackages if entries are actually populated
+    config = lib.mkIf (cfg.desktopEntries != {}) {
+      environment.systemPackages = desktopItems;
+    };
+  };
+}
+#+end_src

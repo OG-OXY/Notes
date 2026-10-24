@@ -1,8 +1,5 @@
-#+title: Scratch Pad
-* TODO
-** Helix Binds
-- Look For Binds You Dont Know
-- Make Existing Binds More Efficient
+#+title: Pandoc
+* TODO Notetaking Setup
 ** Figure out what to do about notetaking setup
 - Pandoc?
   - Use Helix to Write And Paste Markdown
@@ -11,5 +8,3 @@
 - Write Native Markdown And Paste It? (AI Uses Markdown Natively Major Advantage)
   - Use Obsidian For Viewing?
 - What is LaTex? 
-      
-

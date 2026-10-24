@@ -1,0 +1,166 @@
+Markdown is a lightweight markup language used to format plain text so
+that it can be easily converted into HTML. It relies on simple symbols
+like ==hashes, asterisks, and brackets== to structure documents. [1, 2,
+3]
+
+** Basic Formatting
+:PROPERTIES:
+:CUSTOM_ID: basic-formatting
+:END:
+- Headers: Add 1 to 6 =#= symbols before your text. More hashes make
+  smaller headers.
+
+  #+begin_src markdown
+  # Heading 1
+  ## Heading 2
+  ### Heading 3
+  #+end_src
+
+- Bold: Wrap text in double asterisks or double underscores.
+
+  #+begin_src markdown
+  ,**Bold Text** or __Bold Text__
+  #+end_src
+
+- Italics: Wrap text in single asterisks or single underscores.
+
+  #+begin_src markdown
+  ,*Italic Text* or _Italic Text_
+  #+end_src
+
+- Strikethrough: Wrap text in double tildes.
+
+  #+begin_src markdown
+  ~~Strikethrough Text~~
+  #+end_src
+
+  [3, 4, 5, 6]
+
+** Lists and Quotes
+:PROPERTIES:
+:CUSTOM_ID: lists-and-quotes
+:END:
+- Unordered Lists: Begin lines with a hyphen, asterisk, or plus sign,
+  followed by a space.
+
+  #+begin_src markdown
+  - Item A
+  ,* Item B
+  + Item C
+  #+end_src
+
+- Ordered Lists: Begin lines with numbers followed by a period and a
+  space.
+
+  #+begin_src markdown
+  1. First item
+  2. Second item
+  #+end_src
+
+- Blockquotes: Add a =>= symbol before the text.
+
+  #+begin_src markdown
+  > This is a quoted sentence.
+  #+end_src
+
+  [2, 4, 7]
+
+** Links, Images, and Code
+:PROPERTIES:
+:CUSTOM_ID: links-images-and-code
+:END:
+- Hyperlinks: Place the clickable text in brackets and the URL in
+  parentheses.
+
+  #+begin_src markdown
+  [Visit Google](https://google.com)
+  #+end_src
+
+- Images: Use the link format but add an exclamation mark at the very
+  front.
+
+  #+begin_src markdown
+  ![Alt Text](image-url.jpg)
+  #+end_src
+
+- Inline Code: Wrap text in single backticks.
+
+  #+begin_src markdown
+  Use `code` here.
+  #+end_src
+
+- Code Blocks: Wrap multiple lines in triple backticks.
+
+  [2, 3, 4, 8, 9]
+
+=python print("Hello World")=
+
+#+begin_src unset
+
+### Extended Elements
+
+,* **Horizontal Rule**: Place three or more hyphens, asterisks, or underscores on a line by themselves.
+```markdown
+---
+#+end_src
+
+- Tables: Use vertical bars to separate columns and hyphens to create
+  header rows.
+
+  #+begin_src markdown
+
+  | Header 1 | Header 2 |
+  | -------- | -------- |
+  | Cell 1   | Cell 2   |
+  #+end_src
+
+  [8, 10, 11, 12]
+
+For a deep dive into platform variations, you can reference the official
+[[https://daringfireball.net/projects/markdown/syntax][John Gruber
+Markdown Syntax Documentation]] or explore the community-driven
+[[https://www.markdownguide.org/basic-syntax/][Markdown Guide Basic
+Syntax]]. [13]
+
+Are you writing for a specific platform (like GitHub, Reddit, or Notion)
+that might support extended markdown features, or would you like me to
+generate a ready-to-use template for a specific document type?
+
+[1]
+[[https://www.youtube.com/watch?v=_PPWWRV6gbA][https://www.youtube.com]]
+
+[2]
+[[https://www.youtube.com/watch?v=DiYkkraLK1M&t=4][https://www.youtube.com]]
+
+[3]
+[[https://www.youtube.com/shorts/4z0l5Kl2Q6E][https://www.youtube.com]]
+
+[4]
+[[https://help.planyway.com/en/articles/9109802-markdown-syntax][https://help.planyway.com]]
+
+[5]
+[[https://www.youtube.com/watch?v=3wmqu4LzuoU][https://www.youtube.com]]
+
+[6]
+[[https://www.markdownguide.org/basic-syntax/][https://www.markdownguide.org]]
+
+[7]
+[[https://about.samarth.ac.in/docs/guides/markdown-syntax-guide][https://about.samarth.ac.in]]
+
+[8]
+[[https://www.markdownguide.org/cheat-sheet/][https://www.markdownguide.org]]
+
+[9]
+[[https://www.youtube.com/watch?v=AvVSTUMvtZc][https://www.youtube.com]]
+
+[10]
+[[https://www.codecademy.com/resources/docs/markdown/tables][https://www.codecademy.com]]
+
+[11]
+[[https://fuchsia.dev/fuchsia-src/contribute/docs/markdown][https://fuchsia.dev]]
+
+[12]
+[[https://www.analyticsvidhya.com/blog/2023/07/markdown-cheat-sheet/][https://www.analyticsvidhya.com]]
+
+[13]
+[[https://docs.fusionpbx.com/en/latest/doc_guide.html][https://docs.fusionpbx.com]]

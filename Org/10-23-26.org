@@ -1,20 +1,23 @@
-#+TITLE: Oct 22
-Thu Oct 22 22:55:52 2026
-* TODO Main Priorities
+#+TITLE: 10-23-26
+#+date: <2026-10-23 Fri>
+
+* Main Priorities
 ** TODO Migrate Away From HM
-- Figure Out How HM Work Under Hood
+*** TODO Figure Out How HM Work Under Hood
   - Read Its Systemd User Services
   - Read How It Links .config's
   - Learn How To Replace That With Etc
     - Replicate HM's Effect
-- Find A Way To Make ETC Work
+*** TODO Find A Way To Make ETC Work
   - Look At Programs Direct Documentation
     - Figure out how their configs and override priority work
       - Replicate Through ETC
+        
 ** TODO Figure Out How Stash Tabs Work
  - This Will Stop Zen From Taking SOO Much Space Up
-* Integrate Yazi With Emacs?
-** You can integrate the Yazi terminal file manager into Emacs using dedicated Emacs packages that launch Yazi asynchronously and pass back selected files. [1] (https://www.reddit.com/r/emacs/comments/1pv3vqe/any_one_want_try_yazi_in_emacs/), [2] (https://github.com/eval-exec/eee.el)
+   
+** TODO Integrate Yazi With Emacs?
+*** You can integrate the Yazi terminal file manager into Emacs using dedicated Emacs packages that launch Yazi asynchronously and pass back selected files. [1] (https://www.reddit.com/r/emacs/comments/1pv3vqe/any_one_want_try_yazi_in_emacs/), [2] (https://github.com/eval-exec/eee.el)
 
 1. Using eee.el (Recommended for Asynchronous TUI Integration)
 eee.el launches external TUI apps (like Yazi, Lazygit, and Ripgrep) asynchronously without blocking Emacs, and automatically returns callbacks to open selected files. [1] (https://github.com/eval-exec/eee.el)
@@ -57,8 +60,8 @@ If you'd like, let me know:
 - Which Emacs package manager you use (Straight, Elpaca, Doom Emacs, etc.)
 - Which terminal emulator you prefer inside or outside Emacs (Wezterm, Kitty, Alacritty, or term.el)
 
-* Using Dired Instead Of Yazi Intregration?
-** You can replicate your lightning-fast Helix + Yazi file creation and navigation workflow inside Doom Emacs by leveraging its built-in fuzzy finders and a directory-editor called Dired. You do not need to type out full paths or get stuck deep in a folder structure.
+** Using Dired Instead Of Yazi Intregration?
+*** You can replicate your lightning-fast Helix + Yazi file creation and navigation workflow inside Doom Emacs by leveraging its built-in fuzzy finders and a directory-editor called Dired. You do not need to type out full paths or get stuck deep in a folder structure.
 Because you are using Doom Emacs, the core optimization packages are already built-in and heavily configured—you just have to turn them on and learn the fast keybindings.
 
 1. Instant Navigation & Fuzzy Finding (Your Helix space f)
@@ -100,8 +103,8 @@ If you want to configure this directly into your Nix module, let me know:
 - Whether you prefer Emacs default keybindings or Evil (Vim-style) modal bindings inside Doom.
 I can provide the clean Nix code block to wire it up!
 
-** Fixing Dired Not Loading On Startup
-*** This error means that Doom Emacs is trying to call a function (dired-read-dir-and-switches) before the core Dired file manager code has actually been loaded into memory. Because you are using doom-emacs-unstraightened on NixOS, package initialization and autoload variables can sometimes load out of sequence, especially with custom or system-wide configurations. [1] (https://gitlab.com/Walheimat/emacs-config)
+*** Fixing Dired Not Loading On Startup
+**** This error means that Doom Emacs is trying to call a function (dired-read-dir-and-switches) before the core Dired file manager code has actually been loaded into memory. Because you are using doom-emacs-unstraightened on NixOS, package initialization and autoload variables can sometimes load out of sequence, especially with custom or system-wide configurations. [1] (https://gitlab.com/Walheimat/emacs-config)
 
 You can fix this instantly by forcing Emacs to explicitly load dired before anyone tries to call its functions.
 
@@ -118,7 +121,7 @@ elisp
   
 Save the file, restart your Emacs instance or reload your config, and your keybindings (SPC - or SPC d d) will work perfectly without throwing that void function error!
 
-**** What is the difference between the two fixes?
+***** What is the difference between the two fixes?
 The key difference between the two snippets comes down to startup speed vs. safety, and the reason you ran into this is due to how Emacs manages its memory.
 
 - Why this happens (The "Why")
@@ -151,7 +154,7 @@ elisp
 
 Let me know if adding (require 'dired) fixes the SPC - binding right at launch, or if we need to check how Doom's completion engine is mapping your project navigation!
 
-***** Where To Put The Fix
+****** Where To Put The Fix
 You should put configurations, custom package settings, and force-loads like require inside config.el, not init.el.
 - init.el is strictly for telling Doom what modules to download and initialize via the (doom!) block.
 - config.el is where you customize how those modules behave once they are turned on, including loading tweaks.
@@ -168,7 +171,7 @@ elisp
 ;; Force load Dired instantly at startup to fix the NixOS/Unstraightened binding error
 (require 'dired)
 
-** A Faster Alternative for a Note-Taking Setup
+** A Faster Org Setup (No Dired)
 Since your absolute main goal is to use Doom as a super powerful, lightning-fast note-taking app where you can navigate instantly, you can actually use consult-notes or built-in Org-Roam commands to completely bypass Dired altogether.
 
 - Instead of managing directories manually, you can add a keybinding to search your entire ~/Notes folder instantly. Add this to your config.el:
@@ -179,11 +182,11 @@ elisp
       
 Now, striking SPC n f will instantly open a live, recursive fuzzy finder over your entire notes directory, mimicking your exact Helix workflow.
 
-* What Is Org Roam?
+** What Is Org Roam?
 Org-Roam is a tool that turns Emacs into a non-linear, database-backed personal knowledge graph. It replicates the Zettelkasten (slip-box) note-taking method, which is the exact same philosophy behind modern markdown apps like Obsidian or Logseq.
 Instead of organizing your thoughts by nesting files inside deep, messy directory structures, Org-Roam lets you organize your thoughts by connecting concepts together through links.
 
-** The Core Features
+*** The Core Features
 1. Bypassing File & Directory Management Completely
 
 You never have to think about what folder a note should live in or what to name the physical file.

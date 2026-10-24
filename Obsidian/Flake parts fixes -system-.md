@@ -1,6 +1,5 @@
 Here is the formatted, clean Obsidian Markdown note using proper syntax formatting, highlighted code blocks, callouts, and clean section breaks matching the style of your prior notes.
 
-```markdown
 # Handling `allowUnfree` with `flake-parts` & NixOS
 
 When building NixOS configurations using `flake-parts`, you may encounter unfree package evaluation errors (e.g., NVIDIA drivers, proprietary software) even after setting `allowUnfree = true` in standard system modules.

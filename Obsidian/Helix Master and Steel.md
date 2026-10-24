@@ -62,4 +62,4 @@ Once defined in your `flake.nix` inputs, you pass `inputs` down to your modules 
 
 When you run your next system switch, Nix will pull down that exact commit hash, compile the Rust binary from source locally in your store, and hook it up atomically.
 
-[[Oct 20 TODO]]
+[[TODO Oct 20]]

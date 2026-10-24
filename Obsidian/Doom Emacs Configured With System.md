@@ -63,4 +63,4 @@ If you aren't using Home Manager and want to install Doom Emacs directly in `env
 ```
 
 ---
-[[Oct 20 TODO]]
+[[TODO Oct 20]]

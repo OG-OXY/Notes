@@ -1,0 +1,18 @@
+Yes, =>&2= is shorthand in bash for redirecting output to *Standard
+Error (stderr)*.
+
+Here is how those different redirections break down:
+
+- *=>&2=*: Sends standard output (=stdout=) to file descriptor 2
+  (=stderr=). Typically used for printing error messages in scripts
+  (e.g., =echo "❌ Error!" >&2=).
+- *=2>/dev/null=*: Sends standard error (=stderr=) to the bit bucket,
+  completely silencing or hiding error messages.
+- *=2>&1=*: Redirects standard error (=stderr=) so it merges into
+  standard output (=stdout=).
+
+In the script snippet provided earlier, =echo "..." >&2= ensures the
+error message goes to stderr so it gets flagged properly if the script
+fails.
+
+[[THE WAY]]

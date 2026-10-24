@@ -1,0 +1,13 @@
+** # Tasks
+:PROPERTIES:
+:CUSTOM_ID: tasks
+:END:
+*** Modules
+:PROPERTIES:
+:CUSTOM_ID: modules
+:END:
+**** Native
+:PROPERTIES:
+:CUSTOM_ID: native
+:END:
+[[]] #### Custom [[NixOS desktopEntries Helper Function]]

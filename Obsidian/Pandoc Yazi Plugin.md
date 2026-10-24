@@ -1,0 +1,92 @@
+There is! Yazi actually has an ecosystem of Lua plugins, and there is an official community plugin specifically built for this called **`pandoc.yazi`**.
+
+It lets you trigger interactive Pandoc conversions directly on whatever files you have highlighted or selected in Yazi.
+
+### What `pandoc.yazi` Does:
+
+* **Single file focused:** If you hover over a markdown note in Yazi and hit your mapped key, it prompts you for an output format or filename.
+* **Batch selected files:** If you visually select multiple files in Yazi, it can convert all of them to your target format simultaneously.
+
+### How to Set It Up:
+
+1. **Install the plugin:** Inside your Yazi configuration directory (typically `~/.config/yazi/plugins/`), you can clone or drop the `pandoc.yazi` plugin repository.
+2. **Bind a key in `keymap.toml`:** Add a shortcut to your `~/.config/yazi/keymap.toml` to invoke it:
+```toml
+[[manager.prepend_keymap]]
+on = [ "c", "p" ]
+run = "plugin pandoc"
+desc = "Pandoc: Interactive Convert"
+
+```
+
+
+*(Now, pressing `c` then `p` inside Yazi opens up a clean interactive prompt to pipe files through Pandoc instantly).*
+
+---
+
+Would you like to try setting up that Yazi plugin so you can convert files between Obsidian and Org straight from your file explorer view?
+
+That feeling is spot on! Emacs gives you infinite control, but it can easily feel like you're memorizing multi-button combos just to do basic file tasks. In a modal, terminal-driven environment, wrapping Unix utilities directly inside Yazi or Helix keeps things snappy and keyboard-focused.
+
+Using Yazi as your file control center lets you manage conversions without leaving your file manager or fighting Emacs buffers.
+
+---
+
+### Setting Up `pandoc.yazi`
+
+Since Yazi manages plugins via `ya` (or standard Git checkouts in `~/.config/yazi/plugins/`), you can set up the plugin in two quick steps:
+
+#### 1. Add the Plugin to Yazi
+
+Run this in your terminal:
+
+```bash
+ya pack -a yazi-rs/plugins:pandoc
+
+```
+
+*(Or clone `[https://github.com/yazi-rs/plugins](https://github.com/yazi-rs/plugins)` if you manage your dotfiles declarative/natively).*
+
+#### 2. Bind `c p` in `~/.config/yazi/keymap.toml`
+
+Add this block to your Yazi keymaps:
+
+```toml
+[[manager.prepend_keymap]]
+on   = [ "c", "p" ]
+run  = "plugin pandoc"
+desc = "Convert selected file(s) via Pandoc"
+
+```
+
+Now, hovering over any note in Yazi and hitting **`c p`** opens a prompt right in your terminal window asking for output format or target extension. You type `org` or `md`, hit Enter, and the file is written immediately.
+
+---
+
+### Bonus: Executing Fish Functions Directly in Yazi / Helix
+
+If you want absolute maximum speed without even answering prompts, you can bind custom shell commands directly to keys in Yazi's `keymap.toml` using your Fish functions:
+
+```toml
+# Convert highlighted/selected Markdown file straight into ~/Notes/Org/
+[[manager.prepend_keymap]]
+on   = [ "g", "o" ]
+run  = 'shell "md2org \"$0\"" --confirm'
+desc = "Send Markdown note to ~/Notes/Org/"
+
+# Convert highlighted/selected Org file straight into ~/Notes/Obsidian/
+[[manager.prepend_keymap]]
+on   = [ "g", "m" ]
+run  = 'shell "org2md \"$0\"" --confirm'
+desc = "Send Org note to ~/Notes/Obsidian/"
+
+```
+
+* **`g o`**: Instantly converts the note under your cursor and drops it straight into `~/Notes/Org/`.
+* **`g m`**: Instantly converts an Org note and drops it into `~/Notes/Obsidian/`.
+
+No prompts, no menus, no typing cheat codes—just a two-key chord in your file manager and you're done.
+
+---
+
+Would you like to set up the `g o` / `g m` instant keymaps in Yazi, or test out the interactive `pandoc.yazi` prompt first?

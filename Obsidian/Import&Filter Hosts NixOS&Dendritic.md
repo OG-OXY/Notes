@@ -281,3 +281,6 @@ imports = [
 Because host files live outside `./Imports/Modules`, `self.nixosModules` **only** contains feature modules (`warpd`, `uwsm`, `niri`). You can safely use `lib.attrValues self.nixosModules` in any host without recursion filters.
 
 [[THE WAY]]
+
+#filter #lib #concatStringSep #concat #has-suffix #has-prefix #has-ext #suffix #prefix #\n
+#nix #nixlanguage #functions #helper-functions #nix-helperfunctions #file-filter #filter-functions

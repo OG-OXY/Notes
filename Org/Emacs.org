@@ -1,5 +1,0 @@
-#+title: Emacs
-* Enacs TODO List
-** TODO Learn Org
-** TODO General Emacs
-** TODO Figure Out How Daemon Works

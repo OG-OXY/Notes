@@ -1,0 +1,5 @@
+#+title: Helix
+* TODO Helix Binds
+** Helix Binds
+- Look For Binds You Dont Know
+- Make Existing Binds More Efficient

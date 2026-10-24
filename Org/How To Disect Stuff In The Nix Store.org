@@ -1,0 +1,10 @@
+* Run The Command
+:PROPERTIES:
+:CUSTOM_ID: run-the-command
+:END:
+#+begin_src shell
+nix-store -q -R $(which emacs) | grep doom
+#+end_src
+
+- CD into result of command.
+- Open yazi and take a look around.

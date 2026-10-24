@@ -1,0 +1,80 @@
+=nix-doom-emacs-unstraightened= exposes a *Home Manager module
+(=homeModule=)*, not a top-level NixOS system module
+(=nixosModules.default=).
+
+Nix threw =attribute 'nixosModules' missing= because
+=inputs.nix-doom-emacs-unstraightened= does not export an =nixosModules=
+attribute set.
+
+You have two clean options depending on how your dendritic flake handles
+modules:
+
+--------------
+
+*** Option 1: Wire it through Home Manager (Recommended)
+:PROPERTIES:
+:CUSTOM_ID: option-1-wire-it-through-home-manager-recommended
+:END:
+In your Home Manager module import list, import =homeModule=:
+
+**** In your Home Manager user module (=home.nix= or your user module):
+:PROPERTIES:
+:CUSTOM_ID: in-your-home-manager-user-module-home.nix-or-your-user-module
+:END:
+#+begin_src nix
+{ inputs, pkgs, ... }:
+
+{
+  imports = [
+    inputs.nix-doom-emacs-unstraightened.homeModule
+  ];
+
+  programs.doom-emacs = {
+    enable = true;
+    doomDir = ./doom.d; # Directory holding init.el, config.el, packages.el
+    provideEmacs = true; # Generates emacs, emacsclient, and doom-emacs binaries
+  };
+
+  # Optional: Enable user-level Emacs daemon service so emacsclient connects instantly
+  services.emacs = {
+    enable = true;
+    client.enable = true;
+  };
+}
+#+end_src
+
+--------------
+
+*** Option 2: System-Level Package via Overlay (No Home Manager)
+:PROPERTIES:
+:CUSTOM_ID: option-2-system-level-package-via-overlay-no-home-manager
+:END:
+If you aren't using Home Manager and want to install Doom Emacs directly
+in =environment.systemPackages= at the system level, use
+=nix-doom-emacs-unstraightened='s overlay.
+
+**** 1. Apply the Overlay in your system config:
+:PROPERTIES:
+:CUSTOM_ID: apply-the-overlay-in-your-system-config
+:END:
+#+begin_src nix
+{ inputs, pkgs, ... }:
+
+{
+  nixpkgs.overlays = [
+    inputs.nix-doom-emacs-unstraightened.overlays.default
+  ];
+
+  environment.systemPackages = [
+    # Installs emacsWithDoom (which includes emacs, emacsclient, and doom binaries)
+    (pkgs.emacsWithDoom {
+      doomDir = ./doom.d;
+      doomLocalDir = "~/.local/share/nix-doom";
+    })
+  ];
+}
+#+end_src
+
+--------------
+
+[[TODO Oct 20]]

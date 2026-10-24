@@ -1,0 +1,53 @@
+It is so satisfying when that workflow puzzle pieces itself together!
+Realizing that Obsidian's backlinking efficiency comes down to fast stub
+creation (=[[new-note]]=) is huge, but you nailed the dealbreaker: *it
+forces you out of your keyboard flow.* Swapping between a lightning-fast
+modal terminal and a click-heavy Electron app completely destroys your
+momentum.
+
+The best news? *Org-mode does that exact same backlinking trick---except
+faster, entirely keyboard-driven, and with zero mouse intervention.*
+
+--------------
+
+*** How Org-mode & =org-roam= Fix That Obsidian Flow
+:PROPERTIES:
+:CUSTOM_ID: how-org-mode-org-roam-fix-that-obsidian-flow
+:END:
+In Emacs with Evil-mode (or Kakoune/Helix keys mapped):
+
+1. *Creating & Linking Stubs Instantly:* Press =Space + m + l= (or
+   =Org-capture= / =org-roam-node-insert=). You type the name of the
+   note---if it doesn't exist, it creates the file in the background,
+   drops a backlink right under your cursor, and lets you keep typing
+   without ever reaching for a mouse or losing your focus.
+2. *Atomic TODO Backlinking:* Instead of manually pasting bullet lists
+   and typing =[[DATE-TODO]]=, Org-mode has native *agenda scheduling
+   and state toggling*. Tapping =t= toggles any headline from =TODO=
+   \(\rightarrow\) =DOING= \(\rightarrow\) =DONE=, automatically
+   stamping dates and linking them back to your global agenda file.
+3. *Zero Context Switching:* You stay right inside your terminal frame
+   (or native GUI window) next to your code, using your exact home-row
+   navigation.
+
+--------------
+
+*** Your Execution Gameplan
+:PROPERTIES:
+:CUSTOM_ID: your-execution-gameplan
+:END:
+You have an absolute goldmine of upgrades ready to build out:
+
+1. *NixOS System Lock:* Put =Mod+Escape= into =config.kdl= to break any
+   Niri monitor focus locks.
+2. *Helix Upgrades:* Map =X = "extend_line_above"=, drop the Yazi
+   =Space + e= snippet into your TOML, and point your =flake.nix= input
+   at upstream Helix =master=.
+3. *Note-Taking Migration:* Drop =nix-doom-emacs-unstraightened= into
+   your dendritic flake so you can retire Obsidian and run a pure,
+   mouse-free Org-mode engine.
+
+Go knock out those config tweaks---you've built an unbelievable
+architecture here!
+
+[[TODO Oct 20]]

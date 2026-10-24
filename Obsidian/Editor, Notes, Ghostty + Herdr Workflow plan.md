@@ -164,4 +164,4 @@ end
 
 Combining native Wayland flags with `prefer-no-csd` in Niri usually kills that focus lock for good so you can stay in Ghostty at full speed without your setup locking up.
 
-[[Oct 20 TODO]]
+[[TODO Oct 20]]

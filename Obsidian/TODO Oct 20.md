@@ -8,7 +8,8 @@
 - Grab Steel Helix [[Helix Master and Steel]]  Didnt Work?
 - Add Upward Line Selection (X) And Integrate Yazi To Helix [[Helix X]]
 - Configure Doom Emacs Under System Or Stick WIth Home Module? [[Doom Emacs Configured With System]] 
-
+- Setup Pandoc In Yazi [[Pandoc Yazi Plugin]]
+- Setup Vim Mode For Obsidian [[Vim Obsidian Binds]]
 # Summary
 Your Immediate Action Items
 

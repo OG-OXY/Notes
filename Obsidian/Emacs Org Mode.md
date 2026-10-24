@@ -27,4 +27,4 @@ You have an absolute goldmine of upgrades ready to build out:
 
 Go knock out those config tweaks—you've built an unbelievable architecture here!
 
-[[Oct 20 TODO]]
+[[TODO Oct 20]]
