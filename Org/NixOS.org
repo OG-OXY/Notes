@@ -1,4 +1,4 @@
-#+title: Nix Os
+#+title: Nix OS
 * Nix Clean Install Procedure.
 Ah, that makes perfect sense! If you are running the nixos-install purely from your clean, declarative repository state onto the extra drive, that extra drive becomes 100% pristine.
 Since the installation on that extra drive is perfectly clean, cloning that specific drive back to your wiped main SSD via dd will work seamlessly and leave you with a completely flawless system.

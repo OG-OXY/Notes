@@ -1,0 +1,7 @@
+* Inbox
+** [ ] Org Config
+
+[[file:~/Notes/Org/roam/20261024134412-jots.org::*Work On Org Config][Work On Org Config]]
+** [ ] Niri Binds 
+
+[[file:~/Notes/Org/roam/20261024134412-jots.org::*Optimize Niri Binds][Optimize Niri Binds]]

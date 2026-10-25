@@ -1,106 +1,207 @@
-#+title: Note Taking
-To evaluate how these three systems—**Obsidian Cockpit**, **Doom Emacs (Org/Org-Roam)**, and the **TUI Stack (`zk` + Helix + Zathura)**—compare as actual **organizational and knowledge-consumption engines**, we need to strip away editor tribalism and look strictly at how human cognition interacts with database structures.
+​#+title: Note Taking To evaluate how these three systems---*Obsidian
+Cockpit*, *Doom Emacs (Org/Org-Roam)*, and the *TUI Stack (=zk= + Helix
++ Zathura)*---compare as actual *organizational and
+knowledge-consumption engines*, we need to strip away editor tribalism
+and look strictly at how human cognition interacts with database
+structures.
 
-The goal of a note database isn't just storing text; it's **retrieval speed, relational awareness, and contextual synthesis** (being able to look at a past note, instantly understand *why* it exists, and link it to a current problem without breaking flow).
+The goal of a note database isn't just storing text; it's *retrieval
+speed, relational awareness, and contextual synthesis* (being able to
+look at a past note, instantly understand /why/ it exists, and link it
+to a current problem without breaking flow).
 
----
+--------------
 
-## Breakdown: Organizational & Consumption Frameworks
+** Breakdown: Organizational & Consumption Frameworks
+:PROPERTIES:
+:CUSTOM_ID: breakdown-organizational-consumption-frameworks
+:END:
+*** 1. Obsidian Cockpit (Spatial, Visual-Relational Graph Framework)
+:PROPERTIES:
+:CUSTOM_ID: obsidian-cockpit-spatial-visual-relational-graph-framework
+:END:
+Obsidian operates on an *associative Network/Graph Model* (Zettelkasten
+/ Knowledge Graph).
 
-### 1. Obsidian Cockpit (Spatial, Visual-Relational Graph Framework)
+- *The Consumption Philosophy:* Humans are spatial and visual creatures.
+  Obsidian forces notes into a connected Web. It excels at
+  *bi-directional discovery*: seeing what links /to/ a note, what links
+  /away/ from it, and visually exploring cluster maps (Graph View).
+- *Creation Velocity:* *Instant.* Native Markdown means zero translation
+  layer. You dump code, raw LLM outputs, or terminal pastes directly
+  into Tab 4 in Helix, and the database updates automatically.
+- *Consumption Efficiency:* *High.* Rich inline formatting, embedded
+  images, rendered LaTeX/math, and callout boxes (=> [!NOTE]=) make
+  scanning complex technical documentation effortless. The =Link Hints=
+  plugin lets you jump across your web with Vimium-style key-overlays
+  (=f= -> type 2 letters).
 
-Obsidian operates on an **associative Network/Graph Model** (Zettelkasten / Knowledge Graph).
+**** Pros
+:PROPERTIES:
+:CUSTOM_ID: pros
+:END:
+- *Zero-Inertia Markdown Base:* Everything online, from LLM responses to
+  GitHub READMEs, is raw Markdown. No parsing friction.
+- *Visual Context Density:* Callouts, split canvases, and visual graphs
+  let you map out complex software architecture at a glance.
+- *Ecosystem Flexibility:* Millions of users building plugins (Dataview,
+  Omnisearch, Excalidraw).
 
-* **The Consumption Philosophy:** Humans are spatial and visual creatures. Obsidian forces notes into a connected Web. It excels at **bi-directional discovery**: seeing what links *to* a note, what links *away* from it, and visually exploring cluster maps (Graph View).
-* **Creation Velocity:** **Instant.** Native Markdown means zero translation layer. You dump code, raw LLM outputs, or terminal pastes directly into Tab 4 in Helix, and the database updates automatically.
-* **Consumption Efficiency:** **High.** Rich inline formatting, embedded images, rendered LaTeX/math, and callout boxes (`> [!NOTE]`) make scanning complex technical documentation effortless. The `Link Hints` plugin lets you jump across your web with Vimium-style key-overlays (`f` -> type 2 letters).
+**** Cons
+:PROPERTIES:
+:CUSTOM_ID: cons
+:END:
+- *Electron Overhead:* Memory footprint and slight UI abstraction
+  compared to pure terminal binaries.
+- *Plugin Reliance:* To make it feel like a true modal terminal cockpit,
+  you must wire multiple plugins together (=.obsidian.vimrc=,
+  =Link Hints=, =Omnisearch=).
 
-#### Pros
+--------------
 
-* **Zero-Inertia Markdown Base:** Everything online, from LLM responses to GitHub READMEs, is raw Markdown. No parsing friction.
-* **Visual Context Density:** Callouts, split canvases, and visual graphs let you map out complex software architecture at a glance.
-* **Ecosystem Flexibility:** Millions of users building plugins (Dataview, Omnisearch, Excalidraw).
+*** 2. Doom Emacs / Org-Roam (Hierarchical, Mathematical Outline Framework)
+:PROPERTIES:
+:CUSTOM_ID: doom-emacs-org-roam-hierarchical-mathematical-outline-framework
+:END:
+Org-Mode + Org-Roam operates on an *Outliner + Relational Database
+Model* backed by SQLite.
 
-#### Cons
+- *The Consumption Philosophy:* Knowledge is structured hierarchies and
+  actionable states. Org-mode treats text as *executable data
+  structures*. Headings aren't just big text; they are foldable trees
+  (=TAB=), task properties, tags, and database nodes.
+- *Creation Velocity:* *Medium to Low (without scripting).* While typing
+  raw text is fast, pasting external Markdown or code requires string
+  translation or Pandoc parsing so Org syntax doesn't break.
+- *Consumption Efficiency:* *Unmatched Structural Clarity.* Because Org
+  uses true folding trees, you can collapse a 5,000-line technical
+  document into a 5-line high-level outline in one keypress, then drill
+  down into specific sub-headings instantly.
 
-* **Electron Overhead:** Memory footprint and slight UI abstraction compared to pure terminal binaries.
-* **Plugin Reliance:** To make it feel like a true modal terminal cockpit, you must wire multiple plugins together (`.obsidian.vimrc`, `Link Hints`, `Omnisearch`).
+**** Pros
+:PROPERTIES:
+:CUSTOM_ID: pros-1
+:END:
+- *Superior Query Power:* Org-Roam and Datables let you query your notes
+  using LISP/SQL queries (e.g., "Show me every note tagged =#nixos=
+  created in the last 30 days that links to =[[Wayland]]=").
+- *Deep Folding / Outlining Hierarchy:* Unmatched ability to collapse
+  and expand sub-trees to manage huge walls of technical text.
+- *Pure Native Binary Speed:* Runs in a lightweight GUI or terminal
+  buffer with microsecond response time.
 
----
+**** Cons
+:PROPERTIES:
+:CUSTOM_ID: cons-1
+:END:
+- *Markdown Translation Penalty:* External technical data must be
+  formatted to fit Org syntax.
+- *Aesthetic Maintenance:* Requires continuous tweaking of Emacs faces,
+  =org-superstar= fonts, and layouts to maintain a modern aesthetic.
 
-### 2. Doom Emacs / Org-Roam (Hierarchical, Mathematical Outline Framework)
+--------------
 
-Org-Mode + Org-Roam operates on an **Outliner + Relational Database Model** backed by SQLite.
+*** 3. The TUI Stack (=zk= + Helix + Zathura) (Minimalist Unix-Philosophy Pipeline)
+:PROPERTIES:
+:CUSTOM_ID: the-tui-stack-zk-helix-zathura-minimalist-unix-philosophy-pipeline
+:END:
+This stack operates on a *Decoupled Unix Toolchain Model*.
 
-* **The Consumption Philosophy:** Knowledge is structured hierarchies and actionable states. Org-mode treats text as **executable data structures**. Headings aren't just big text; they are foldable trees (`TAB`), task properties, tags, and database nodes.
-* **Creation Velocity:** **Medium to Low (without scripting).** While typing raw text is fast, pasting external Markdown or code requires string translation or Pandoc parsing so Org syntax doesn't break.
-* **Consumption Efficiency:** **Unmatched Structural Clarity.** Because Org uses true folding trees, you can collapse a 5,000-line technical document into a 5-line high-level outline in one keypress, then drill down into specific sub-headings instantly.
+- *The Consumption Philosophy:* Separation of Concerns. =zk= acts as the
+  SQLite indexer in the background, Helix acts as the high-speed input
+  terminal buffer, and Zathura/Glow acts as the rendered visual output
+  window.
+- *Creation Velocity:* *Maximum.* You write pure Markdown inside your
+  primary editor (Helix). =zk= handles ID generation, tagging, and
+  backlink insertion directly via CLI wrappers or fuzzy-finder hooks.
+- *Consumption Efficiency:* *Keyboard-Centric Efficiency.* Zathura
+  auto-compiles Markdown/Typst to PDF/HTML on save (=:w=). Hitting =f=
+  in Zathura overlays Vimium link hints on the compiled view to jump
+  between notes.
 
-#### Pros
+**** Pros
+:PROPERTIES:
+:CUSTOM_ID: pros-2
+:END:
+- *Zero Context Switch:* You live 100% inside Helix, Ghostty, and Niri.
+  No heavy GUI apps running.
+- *Future-Proof Plain Text:* No vendor lock-in. Built entirely on
+  terminal binaries (=zk=, =fzf=, =zathura=, =helix=).
+- *Microsecond Latency:* Fastest possible execution speed from keystroke
+  to screen update.
 
-* **Superior Query Power:** Org-Roam and Datables let you query your notes using LISP/SQL queries (e.g., "Show me every note tagged `#nixos` created in the last 30 days that links to `[[Wayland]]`").
-* **Deep Folding / Outlining Hierarchy:** Unmatched ability to collapse and expand sub-trees to manage huge walls of technical text.
-* **Pure Native Binary Speed:** Runs in a lightweight GUI or terminal buffer with microsecond response time.
+**** Cons
+:PROPERTIES:
+:CUSTOM_ID: cons-2
+:END:
+- *No Native Visual Graph:* You lose the interactive node canvas/graph
+  overview provided by Obsidian or Org-Roam.
+- *Toolchain Assembly Required:* You are the systems
+  integrator---stitching together background file watchers, CLI
+  indexers, and PDF viewers via shell scripts.
 
-#### Cons
+--------------
 
-* **Markdown Translation Penalty:** External technical data must be formatted to fit Org syntax.
-* **Aesthetic Maintenance:** Requires continuous tweaking of Emacs faces, `org-superstar` fonts, and layouts to maintain a modern aesthetic.
+** Detailed Pros & Cons Comparison Matrix
+:PROPERTIES:
+:CUSTOM_ID: detailed-pros-cons-comparison-matrix
+:END:
+| Feature / Metric            | *Obsidian Cockpit*               | *Doom Emacs (Org-Roam)*                | *TUI Stack (=zk= + Helix + Zathura)*  |
+|-----------------------------+----------------------------------+----------------------------------------+---------------------------------------|
+| *Source Syntax*             | Native Markdown (=.md=)          | Native Org-Mode (=.org=)               | Native Markdown / Typst               |
+| *Relational Model*          | Visual Knowledge Graph           | Relational Database & Tree Hierarchy   | SQLite Index over Plain Files         |
+| *Paste / Ingestion Speed*   | *Instant* (Zero-friction)        | *Requires Translation Script*          | *Instant* (Zero-friction)             |
+| *Structure Manipulation*    | Good (Header folding, links)     | *Best* (Tree manipulation, properties) | Basic (Line-based editing in Helix)   |
+| *Link Navigation Speed*     | *Fast* (via =Link Hints= plugin) | *Fast* (via =ace-link= / =avy=)        | *Fast* (via Zathura Vim hints)        |
+| *Visual Aesthetics*         | *Publisher Grade* (Native CSS)   | *Customizable* (Requires config)       | *Minimal / Document Grade* (PDF/HTML) |
+| *System Resource Footprint* | Moderate (Electron RAM usage)    | Low (Emacs daemon)                     | *Ultra-Low* (Pure Unix binaries)      |
 
----
+--------------
 
-### 3. The TUI Stack (`zk` + Helix + Zathura) (Minimalist Unix-Philosophy Pipeline)
+** Objective Verdict: Which Framework Performs Best?
+:PROPERTIES:
+:CUSTOM_ID: objective-verdict-which-framework-performs-best
+:END:
+*** *Winner for Pure Cognitive Retention & Fast Consumption: Obsidian Cockpit*
+:PROPERTIES:
+:CUSTOM_ID: winner-for-pure-cognitive-retention-fast-consumption-obsidian-cockpit
+:END:
+If your priority is *digesting technical information quickly and
+remembering connections*, *Obsidian Cockpit* wins objectively for a
+developer workflow.
 
-This stack operates on a **Decoupled Unix Toolchain Model**.
+**** Why?
+:PROPERTIES:
+:CUSTOM_ID: why
+:END:
+1. *Zero-Friction Context Ingestion:* As a system practitioner working
+   with LLMs, Nix configurations, and web documentation, your incoming
+   data stream is *100% Markdown*. Obsidian ingests this natively
+   without parsing steps, meaning the friction between /finding info/
+   and /storing info/ is zero.
+2. *Dual-Brain Architecture:* By writing in Helix (Tab 4) and
+   viewing/navigating via a keyboard-mapped Obsidian instance running
+   adjacent in Niri, you get the raw speed of modal terminal editing
+   paired with the visual cognitive density of rendered markdown, graph
+   maps, and side-by-side backlink panes.
+3. *Spatial Memory:* Humans remember /where/ information lives when it
+   is visually linked. Obsidian's ability to render side-by-side node
+   connections and backlink panels provides immediate context that plain
+   text files or terminal lists cannot replicate.
 
-* **The Consumption Philosophy:** Separation of Concerns. `zk` acts as the SQLite indexer in the background, Helix acts as the high-speed input terminal buffer, and Zathura/Glow acts as the rendered visual output window.
-* **Creation Velocity:** **Maximum.** You write pure Markdown inside your primary editor (Helix). `zk` handles ID generation, tagging, and backlink insertion directly via CLI wrappers or fuzzy-finder hooks.
-* **Consumption Efficiency:** **Keyboard-Centric Efficiency.** Zathura auto-compiles Markdown/Typst to PDF/HTML on save (`:w`). Hitting `f` in Zathura overlays Vimium link hints on the compiled view to jump between notes.
+*** When should you pick the other two?
+:PROPERTIES:
+:CUSTOM_ID: when-should-you-pick-the-other-two
+:END:
+- Pick *Doom Emacs / Org-Roam* if you prioritize *deep hierarchical task
+  management, structured data outlines, and SQL-like querying* over raw
+  Markdown compatibility and instant LLM pasting.
+- Pick the *TUI Stack (=zk= + Zathura)* if you refuse to run Electron
+  under any circumstance and demand a *100% pure Unix terminal pipeline*
+  where every piece of the stack is a command-line binary.
 
-#### Pros
+--------------
 
-* **Zero Context Switch:** You live 100% inside Helix, Ghostty, and Niri. No heavy GUI apps running.
-* **Future-Proof Plain Text:** No vendor lock-in. Built entirely on terminal binaries (`zk`, `fzf`, `zathura`, `helix`).
-* **Microsecond Latency:** Fastest possible execution speed from keystroke to screen update.
-
-#### Cons
-
-* **No Native Visual Graph:** You lose the interactive node canvas/graph overview provided by Obsidian or Org-Roam.
-* **Toolchain Assembly Required:** You are the systems integrator—stitching together background file watchers, CLI indexers, and PDF viewers via shell scripts.
-
----
-
-## Detailed Pros & Cons Comparison Matrix
-
-| Feature / Metric | **Obsidian Cockpit** | **Doom Emacs (Org-Roam)** | **TUI Stack (`zk` + Helix + Zathura)** |
-| --- | --- | --- | --- |
-| **Source Syntax** | Native Markdown (`.md`) | Native Org-Mode (`.org`) | Native Markdown / Typst |
-| **Relational Model** | Visual Knowledge Graph | Relational Database & Tree Hierarchy | SQLite Index over Plain Files |
-| **Paste / Ingestion Speed** | **Instant** (Zero-friction) | **Requires Translation Script** | **Instant** (Zero-friction) |
-| **Structure Manipulation** | Good (Header folding, links) | **Best** (Tree manipulation, properties) | Basic (Line-based editing in Helix) |
-| **Link Navigation Speed** | **Fast** (via `Link Hints` plugin) | **Fast** (via `ace-link` / `avy`) | **Fast** (via Zathura Vim hints) |
-| **Visual Aesthetics** | **Publisher Grade** (Native CSS) | **Customizable** (Requires config) | **Minimal / Document Grade** (PDF/HTML) |
-| **System Resource Footprint** | Moderate (Electron RAM usage) | Low (Emacs daemon) | **Ultra-Low** (Pure Unix binaries) |
-
----
-
-## Objective Verdict: Which Framework Performs Best?
-
-### **Winner for Pure Cognitive Retention & Fast Consumption: Obsidian Cockpit**
-
-If your priority is **digesting technical information quickly and remembering connections**, **Obsidian Cockpit** wins objectively for a developer workflow.
-
-#### Why?
-
-1. **Zero-Friction Context Ingestion:** As a system practitioner working with LLMs, Nix configurations, and web documentation, your incoming data stream is **100% Markdown**. Obsidian ingests this natively without parsing steps, meaning the friction between *finding info* and *storing info* is zero.
-2. **Dual-Brain Architecture:** By writing in Helix (Tab 4) and viewing/navigating via a keyboard-mapped Obsidian instance running adjacent in Niri, you get the raw speed of modal terminal editing paired with the visual cognitive density of rendered markdown, graph maps, and side-by-side backlink panes.
-3. **Spatial Memory:** Humans remember *where* information lives when it is visually linked. Obsidian’s ability to render side-by-side node connections and backlink panels provides immediate context that plain text files or terminal lists cannot replicate.
-
-### When should you pick the other two?
-
-* Pick **Doom Emacs / Org-Roam** if you prioritize **deep hierarchical task management, structured data outlines, and SQL-like querying** over raw Markdown compatibility and instant LLM pasting.
-* Pick the **TUI Stack (`zk` + Zathura)** if you refuse to run Electron under any circumstance and demand a **100% pure Unix terminal pipeline** where every piece of the stack is a command-line binary.
-
----
-
-Would you like to start by generating the exact `.obsidian.vimrc` and plugin manifest to build the Obsidian Cockpit, or would you prefer the shell scripts to wire up the `zk` + Helix + Zathura terminal stack?
+Would you like to start by generating the exact =.obsidian.vimrc= and
+plugin manifest to build the Obsidian Cockpit, or would you prefer the
+shell scripts to wire up the =zk= + Helix + Zathura terminal stack?

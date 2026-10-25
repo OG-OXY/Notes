@@ -1,0 +1,76 @@
+#+title: Questions
+* Tweaks to init.el?
+#+begin_src emacs-lisp :tangle yes
+;; doom.d/init.el
+(doom!
+	:input
+	;; layout
+
+	:completion
+	(corfu +orderless) ; add +icons if using gui
+	vertico
+
+	:ui
+	doom
+	dashboard
+	hl-todo
+	modeline
+	ophints
+	window-select
+	workspaces
+	vi-tilde-fringe
+	(popup +defaults)
+	(vc-gutter +pretty)
+	
+	:editor
+	(evil +everywhere)
+	file-templates
+	snippets
+
+	:emacs
+	dired
+	undo
+
+	:term
+	eshell
+	vterm
+
+	:os
+	(tty +osc)
+
+	:lang
+	emacs-lisp
+    (org +roam2 +pretty +dragndrop)
+	nix
+	rust
+	(cc +ccls)
+	markdown
+
+	:tools
+	(lsp +eglot)
+
+	:config
+	(default +bindings +smartparens))
+
+#+end_src
+
+- it might be shocking for me to say since im a cmdline tui preferring person and i use niri and yazi and vi driven workflow thats extremely efficient but i like my stuff to be feature rich and include everything and alot of the extras that most people would consider bloat or uneccessary. like to be honest it shows where others are stubborn and wont change there ways for advantages and more features and even faster smoother programs (still using tmux, chormium or firefox, alacritty, preferring obsidian.nvim or norg.nvim and vieweing notes where they write them in neovim over using the obsidian desktop as a viewer etc) i actually use more modern and feature rich tools to and it shows in my preferences that im like this
+  
+- i use helix as my primary editor (where most would stick with the former, neovim, or worse real vim) or how i use herdr and i use ghostty (which kinda finds way more of a balance its not a full on bare skeleton of a term like alacritty but its also not loaded like something like kitty or wezterm, (also side note: can you use fish in wezterm? most people use bash in it i assume so and how does wezterm compare to ghostty? i heard it has native server session state save where it runs ur instranceon a socket in the background like tmux ressurect or herdr) and i prefer a nice gui to view my notes in i also have bitwarden rofi rbw but i use the bitwarden-desktop to actually manage entries or the browser extension and to add new entries i only use rbw for auto  completion or syncing my vault quick with my environment and keyring, and where most would use chromium or firefox, i use zen browser and it has those workspaces and a dissapearing compacting vertical tab bar so it LITERALLY acts like a multiplexer, it has native binds for splits (literally a horizontal or vertical splits in the same tab with 2 sites in the same tab or window frame) , cycling workspaces (equivalent to horizontally moving on a niri ribbon or switching tmux herdr workspaces (or tabs)) and vimiumC gives me the ability to move up and down a tab which gives another layer of manipulation from that hidden vertical tab display popup that only pops out if you hover near the edge with your mouse (which acts like niri columns within my window manager or tabs within herdr/tmux within the workspaces themselfes(just like the zen workspaces)  so my browser itself acts like a full on mini multiplexer for browsing) so lets see i use herdr over tmux helix over neovim zen browser over chromium obsidian (or org emacs as of recently for notes and vieweing) as my note viewer even though i write and paste the notes in helix, and i use ghostty instead of alacritty, notice a balance taking place? i find zellij to be a bit much and the way it works modally just doesnt work and  sync with my setup which is to bad but its okay b.c herdr is even more polished looking does everything zelllij and tmux can do but more than that and has a whole agentic integration layer, and the way the modes work is exactly like tmux so it works and syncs with my binds and the rest of my workflow (notice that no compromise willing to use newer better tools as long as theyre actually objectively better and include more and nonwillingness to t ake in uneccessary bloat or  stuff i dont need (like kitty) how i choose ghostty cuz its objectively better it has that raw speed without uneededly handycapping and stripping itself ike alacritty does? u see the trend? knowing that and what ive set so far for emacs how should i adjust my init.el?
+  
+* How Should I View My Notes?
+- which notetaking method/app do you think would be best for me? we went over writing native in helix and using zk and modifying obsidian to be a viewer by plugins and keybinding so i can modally and completely keyboard drive my note viewing framework without it being the one break in my flow, we went over switching to emacs as a full time note operating system and using pandoc and shell for loops to convert stuff i paste and dont hand write from markdown to norg thats from llms or webpages, we looked at NB and something called tpy or typst and some other program that acts as a viewer for it i forgot what it was called i think it was a tui and we went over some tui options like that b.c i really like tuis and there was 1 fact we objectively knew was 100% true and fact, that writing notes in helix (and specifically markdown b.c the syntax is so easy and quick and b.c everything i copy online, from llms, is also markdown) and not having to leave were i live to develop is objectively the BEST and fastest way to actually take and get the notes down and done and back to actual work instead oof wasting time taking information down instead of actually using it to do the work, so we know this as 100% fact but then what  would be the best viewport that meets the requirements of #1 Looking Visually very  nice like obsidian and #2 fitting right into and alongside my vi keyboard modal driven ecosysttem without breaking the workflow, #3 it has to be MORE than just a simple image viewer or viewport though, b.c then what use is taking down and databasing all that info if you cant modally and quickly navigate and digest it in a way that makes sense and a way you can actually find the information you need and if it doesnt organize it in a accurate and efficient way and give you a good way to interface and navigate your knowledge database, then it might aswell be completely useless and have not taken the notes in the first place b.c that actually wouldve been a better use of my time cuz then i wouldve done WAY more actually work instead of wasting all that time writing and copying all this stuff down that i cant even refer to in a meaningful way.
+** Write a Pandoc for loop in Fish for "export" Folder/Dir
+*** Write all Markdown in Export Dir
+- Write Markdown natively in Helix *fastest way to get notes down*
+- Write everything in Export Dir *everything online is all markdown*
+- Everytime Pandoc for loop runs it exports everything in "Export" Dir to Org from Markdown *Converts Markdown to Org*
+  - It then copies the new Org files over to the "Org" Dir and removes all files from "Export" on successful pandoc run
+*** How the For Loop shoule work
+- Make the for loops rm command only remove Org files from "Export" Dir
+  - This will assure that if files fail to export that are still markdown they are not removed
+- Make the cp command run BEFORE the remove so that files that are converted successfully are safe in the Org Dir before there inevitable deletion via
+  #+begin_src shell
+rm -f *.org
+  #+end_src
+- If the Export Dir still has md left fix the problem and run the For Loop again

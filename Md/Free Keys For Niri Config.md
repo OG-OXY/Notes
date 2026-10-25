@@ -1,0 +1,19 @@
+# Free Keys For Niri Config
+- `Mod+`
+ - `A, S, D, Y, T`
+- Change Consume-Window, Expel-Window, back to `Mod+Y`, `Mod+P`?
+- What to do with Consume-Or-Expel window left & right then? *Changing Back To Y And P*
+ - Works from perspective of focused window, ie; If theres a window to consume into the window your focusing on the right it consumed when you press right, otherwise it expels the window your focusing out from the column its in's parent window in whatever side direction you press consume or expel window in
+ - Want to make it left and right oriented like my consume/expel and monitor jump.
+ - Consume or expel left and right to s and d? if y and p go back to consume and expel?
+- `set-column-width` and `set-column-height` to `Mod+ S & D` & `Mod+Shift+ S and D`? or to `A` and `S`? *Could Be useful to free up D and change warpd menu* to just `Mod+D` *Just like show Dmenu or Drun in wofi, and rofi* And then i could free up `W` and access warpd quicker.
+- Assigned keys.
+ - `A`, `S` set to `set-column-width` & height.
+ - `D` Set to Warpd Which Key menu.
+ - `W` Set to `focus-previous-workspace`.
+ - `Slash` Set to `switch-preset-column-width-back`.
+- Commands left to assign to a key.
+ - `switch-preset-column-width` *Set to `,` for now, `,` or `/`?*
+ - `switch-preset-column-width-back` *Set to `<` for now, `<` or `?`?*
+ - `expand-column-to-available-width`
+  - Figure out what this bind/command does exactly.

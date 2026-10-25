@@ -1,0 +1,28 @@
+#+title: Emacs Control Center & Meow Integration Guide
+* Emacs Control Center & Meow Integration Guide
+:PROPERTIES:
+:ID:       20261025T154401
+:ROAM_TAGS: emacs meow helix architecture nixos
+:END:
+
+** Architecture: Helix Yin / Emacs Yang
+- **Helix:** Fast Markdown/code drafting engine.
+- **Emacs:** Native Elisp interpreter, interactive execution pad, visual graph, and modal command center ("MPC pad").
+
+** Implementation Strategy
+*** 1. Muscle Memory Parity (Meow)
+- Replace Evil-mode with **Meow** to enforce Helix's selection-first ("select-then-act") object-action model.
+- Bypasses external/brittle LSP wrappers (`elisp-ls`) by utilizing Emacs's native evaluation (`C-x C-e`), live docstrings, and structural parenthesization.
+
+*** 2. Declarative Nix Repository Override
+- Override `doom/find-file-in-private-config` (`SPC f p`) to point to source repo:
+  #+begin_src elisp
+  (after! doom-dashboard
+    (defun doom/find-file-in-private-config ()
+      (interactive)
+      (find-file (expand-file-name "~/NixOS/Master/Modules/Features/doom/doom.d/"))))
+  #+end_src
+- Eliminates read-only errors from Nix store symlinks (`/nix/store/...`).
+
+** Execution Flow
+Helix (Drafting) -> Fish `notes-sync` -> Emacs/Org-roam (Command & Knowledge Control Center)

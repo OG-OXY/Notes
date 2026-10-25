@@ -1,0 +1,23 @@
+* Jots 10-25
+- make sure to ask gemmy to summarize the last prompt responses she gave me and this video https://youtu.be/AyhPmypHDEw
+  
+- where should my notes live? i like how documents is automatically linked alongside home in my file picker and how it has an icon where as my ~/Notes Dir doesnt should i get rid of the notes Dir or should i keep it and use it in a different way and use it more as like a draft messy vault and Org inside Documents or maybe even just my org Dir being the root of Documents itself and then any misc items or other documents can get their own dir nested inside Documents while my org Dir root is Documents itself and thats where all the notes themselves go in one big pool
+  - depending on the answer to Notes and Documents Dir question also where should my roam Dir go? should it live in the a Dir in the root of my org Dir or should it go somewhere else completely? like .roam in my home folder or the root of Documents? also im not supposed to actually put anything myself in the roam Dir right? its just for roam the emacs package to manipulate and create ids for stuff to create the atomic zettelkasten style note database?
+  
+- if i should get rid of the Notes Dir and switch to documents how should i structure my org, markdown, misc and other docs in it? should i just put org and markdown notes regardless of file-type all in the same
+
+- regarding the messy vault write fast in markdown and past and clean inbox (org/roam database) Dirs which
+        
+- how and when do i use org capture?
+  - what type of input am i suppose to put in the buffer?
+    - whats a system or list of characteristics or attributes or some system i could follow to know what catagory to capture something in?
+      - what do i use org capture on and what should i not use it on?
+        
+- how and when should i use roam?
+  - am i supposed to use roam on every file i create? if so why doesnt it automatically database them and create ids for them? is it b.c im supposed to do or put something in the buffer when i capture the id for it and it needs user input?
+    - if so what user input goes there and why?
+      
+- Can you give me a breakdown on all the short and longhand ways to do stuff in an org file and a breakdown on all the syntax and what each thing does
+  - can you include methods or a quick short simple this is the most efficient and quickest way to use such and such syntax in org to declare such and such thing after each entry explaining syntax?
+    
+- The other day i made a note called jots and tried to capture it as a node or whatever and im confused about how this system works and with this note its another jot or notepad scratchpad to put ideas and thought down instantly right as they pop in so i pressed SPC n r n to capture to node and then instead of typing something in new i selected a node that i made from a capture of a jot yesterday and captured as Jots and so i select Jots in the buffer right after hitting that last n and then immediately followed up with C-c C-c to write the capture or node and it said saved written or whatever right but i opened the file the node was made with originally and the node itself and obviously im currently vieweing/writing in this jot and nothing gets added to this file or the node or the original file i made the node with so i guess im not understanding how this works exactly can you explain the proper way its supposed to be used/typically how other powerusers use/do this? and how the system works?

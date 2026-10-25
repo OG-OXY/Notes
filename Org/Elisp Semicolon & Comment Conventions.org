@@ -1,0 +1,16 @@
+#+title: Elisp Semicolon & Comment Conventions 
+* Elisp Semicolon & Comment Conventions
+:PROPERTIES:
+:ID:       20261025T154400
+:ROAM_TAGS: elisp syntax convention helix
+:END:
+
+** Syntax Rules
+- All `;` variations are syntactically identical (line comments).
+- Helix defaults to `;` (`comment-token = ";"`) as the minimal comment character.
+
+** Hierarchy & Auto-Indentation
+- `;` :: Inline margin notes (auto-aligned to col 40 by Emacs).
+- `;;` :: Standard line notes/code blocks (indents to current code depth).
+- `;;;` :: File headers (`;;; config.el -*- ... -*-`) & main outline sections.
+- `;;;;` :: Major structural banners in massive packages.

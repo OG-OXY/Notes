@@ -1,0 +1,33 @@
+:PROPERTIES:
+:ID:       77c44b98-c9a5-47c6-88fe-ba7501da71ad
+:END:
+#+title: Jots
+* Optimize Niri Binds
+
+** Free Keys
+- Mod+A
+- Mod+S
+- Mod+D
+- Mod+E
+* TODO Work On Org Config
+** Improve Visuals
+- Get Packages
+- Set Settings To Make Org Viewing Experience Better
+** Doom Modules
+ * Use C-h doom/help-modules
+   - Take a look at module options
+   - Are there any extra features to modules i need/want
+   - Are there modules id like to activate?
+** Get Kitten Image Protocol For Terminal Doom
+ - Fix Tooltips & Auto-Completion Popups in Terminal
+ * For Vertico / Corfu Popups
+   - In doom.d/packages.el:
+#+begin_src emacs-lisp :tangle yes
+    (package! corfu-terminal)
+#+end_src
+   - In doom.d/config.el:
+#+begin_src emacs-lisp :tangle yes
+;; Enable TUI popups when running in terminal mode
+(unless (display-graphic-p)
+  (corfu-terminal-mode +1))
+#+end_src
