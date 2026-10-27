@@ -360,7 +360,7 @@ note in your system that references `Pin`.
 
 ---
 
-### The Optimal 2-Step Workflow Pipeline
+### Optimal 2-Step Workflow Pipeline
 
 ┌─────────────────────────────────────────┐
 │     Step 1: Scratchpad / Buffer         │

@@ -1,3 +1,11 @@
 * Inbox
+
 [[file:~/Notes/Org/questions.org]]
-[[file:~/Notes/Org/roam/20261024134412-jots.org::*Get Kitten Image Protocol For Terminal Doom][Get Kitten Image Protocol For Terminal Doom]]
+
+** [2026-10-26 Mon] 
+
+[[file:~/Notes/Org/Scratch 10-25-26.org::#should-i-change-the-o-for-my-delete-key][Should I change the =o= for my =Delete= key]]
+
+** [2026-10-26 Mon] 
+
+[[file:~/Notes/Org/Scratch 10-25-26.org::#org-mode-org-roam-core-features][Org-Mode & Org-Roam Core Features]]
