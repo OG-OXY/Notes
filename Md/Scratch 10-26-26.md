@@ -246,6 +246,7 @@ pgrep -af emacs
 ls -la $XDG_RUNTIME_DIR/emacs
 
 ````
+
 # Emacs Lazy Loading
 
 Hell no, lazy loading isn't exclusive to Doom at all! Doom just wraps standard
@@ -546,3 +547,80 @@ combining everything into standard vanilla `use-package` declarations.
   (setq tooltip-use-echo-area t))
 
 ```
+
+# Overrides for Emacs's `H-E-L`
+
+In Helix (and Kakoune), *a 1-character selection IS the normal cursor state*.
+There is no such thing as a cursor floating in the void "between" characters
+without highlighting what it's on.
+When you jump around, that single highlighted box gives you instant, unmistakable
+spatial feedback: *if I press `d` or `c` right now, THIS exact character dies.*
+
+When `hel` strips that away, forces a thin bar cursor, and defaults to
+deleting *backward* without a visual region, it throws out the core promise of
+object-action editing. You're left guessing where the point boundary actually sits.
+
+---
+
+## The Clean Overrides to Reclaim Your Helix Experience
+
+Since we know *why* `hel` was behaving so weirdly, we can completely override
+the maintainer's opinions in your `init.el`.
+
+Here is the targeted snippet to drop into your Vanilla `init.el` under the
+`(use-package hel)` block. It reinstates the high-visibility *block cursor*,
+forces `d` to delete forward (or delete the active selection), and fixes
+`gl`/`gh` so they act like simple, non-selecting goto motions:
+
+```elisp
+;; --- 3. Helix Emulation Layer (hel) ---
+(use-package hel
+  :config
+  ;; 1. OVERRIDE AUTHOR CURSOR DEFAULTS: Bring back high-visibility block cursor in Normal state!
+  (setq hel-normal-cursor 'box       ; Solid block cursor so you always see the 1-character selection
+        hel-insert-cursor 'hbar)     ; Underline (or 'bar) for Insert state so your eyes don't lose it
+
+  ;; 2. Activate hel safely
+  (if (fboundp 'hel-global-mode)
+      (hel-global-mode 1)
+    (global-hel-mode 1)))
+
+;; Fix keybindings & motion math after hel loads
+(with-eval-after-load 'hel
+  ;; FIX 'd': Delete active selection, OR delete character forward under the block cursor
+  (defun my/hel-delete-inclusive ()
+    "Delete active region if present, otherwise delete character directly under the block cursor."
+    (interactive)
+    (if (use-region-p)
+        (call-interactively #'hel-delete)
+      (delete-char 1)))
+
+  (define-key hel-normal-mode-map (kbd "d") #'my/hel-delete-inclusive)
+
+  ;; FIX 'gl' and 'gh': Jump to line start/end WITHOUT forcing persistent regional selections
+  (defun my/hel-goto-line-end ()
+    (interactive)
+    (deactivate-mark)
+    (move-end-of-line 1))
+
+  (defun my/hel-goto-line-start ()
+    (interactive)
+    (deactivate-mark)
+    (move-beginning-of-line 1))
+
+  (when (boundp 'hel-goto-map)
+    (define-key hel-goto-map (kbd "l") #'my/hel-goto-line-end)
+    (define-key hel-goto-map (kbd "h") #'my/hel-goto-line-start)))
+
+```
+
+---
+
+## Why this fixes the friction immediately:
+
+1. *Visual Clarity:* You get your solid high-contrast block cursor back in
+Normal mode—no more losing a bar cursor or guessing where the boundary is.
+2. *Predictable Deletions:* Tapping `d` on a character deletes the character
+under the block. Tapping `d` on an active region deletes the region.
+3. *Clean Goto Motions:* `gh` and `gl` just jump your cursor to line start/end
+without forcing unwanted highlights across the whole line.
