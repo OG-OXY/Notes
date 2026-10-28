@@ -87,3 +87,67 @@ This gets rid of the script bloat and treats it exactly like a native system pac
 Would you like help tracking down any missing dependency errors during the system
 rebuild, or should we verify your nh os switch mapping setup to ensure the new
 input hooks register correctly?
+
+# Eager vs. Lazy Loading
+
+## What "Eager Loading at Startup" Means
+
+*Eager loading* (or loading unconditionally at startup) means that the moment
+Emacs boots up and reads your `init.el`, it immediately compiles, evaluates,
+and loads the entire package's code into active memory.
+
+- *The Cost:* Every package you eagerly load adds to your Emacs cold-start
+boot time.
+If you eagerly load 50 heavy packages, your startup time crawls.
+- *The Benefit:* It is guaranteed to be ready. There is zero delay or
+"autoload stub" overhead the first time you try to use it.
+*(Note: If you run Emacs as a background daemon for your Ghostty/herdr splits,
+cold-start boot time matters less day-to-day, but keeping it lean is still best practice).*
+
+---
+
+## How to Decide Eager vs. Lazy Loading
+
+You make the decision based on **when** the package needs to be active in
+order for your workflow not to break.
+
+### 1. Eager Load (`:demand t`) — Use Sparingly
+
+You eager-load a package **only** if it meets one of these strict criteria:
+
+- *Global Minor Modes:* It fundamentally alters how every single buffer
+behaves globally from the second you open a window (e.g., `helix-mode`, global
+line numbers, global completion backends).
+- *Themes & UI Layouts:* Visual frameworks that need to paint the screen
+immediately so you don't get a flash of unstyled white/default text on startup
+(e.g., `doom-one`, your dashboard).
+
+### 2. Lazy Load (`:bind`, `:hook`, `:commands`, `:mode`) — Default to This
+
+You lazy-load everything else. `use-package` makes this automatic by creating
+lightweight placeholders. The package code stays unloaded until a specific
+trigger occurs:
+
+- *Keybindings (`:bind`):* Magit doesn't load into memory until you hit `C-x g`.
+- *Hooks (`:hook`):* `org-modern` or `org-appear` don't load until you
+actually open an `.org` file and enter `org-mode`.
+- *File Extensions (`:mode`):* Markdown or Python linters don't load until you
+open a file ending in `.md` or `.py`.
+
+---
+
+## How This Applies to Your `init.el`
+
+Looking at your clean configuration architecture, here is how your packages
+naturally divide:
+
+- *Eager Loaded (`:demand t` or global init):*
+- `helix-mode` (Needs to hook into every buffer instantly).
+- `vertico` / `corfu` (Global completion engine).
+- Theme & UI toggles.
+
+
+- *Lazy Loaded (Deferred via hooks/binds):*
+- `magit` (Loads only on `C-x g`).
+- `org-roam` / `org-modern` (Loads only when entering `org-mode`).
+- `pandoc-mode` (Loads only when markdown/org files trigger the hook).
